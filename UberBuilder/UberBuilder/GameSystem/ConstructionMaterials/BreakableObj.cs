@@ -38,8 +38,18 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public List<Vertices> verticesList;
         public VertexPositionColor[] vertexPositionColors;
         public List<VertexPositionColor[]> TESTListOfVertices;
+        public List<VertexBuffer> vertexBuffers;
+        public List<Vector2> centroids;
+        public Sprite TESTCentroid;
 
-        IndexBuffer indexBuffer;
+        IndexBuffer indexBuffer3;
+        IndexBuffer indexBuffer4;
+        IndexBuffer indexBuffer5;
+        IndexBuffer indexBuffer6;
+        IndexBuffer indexBuffer7;
+        IndexBuffer indexBuffer8;
+        //индексы вершин(отсортированных по часовой относительно своего центройда) 
+        //порядок которых означает посрядок отрисовки треугольников
         ushort[] triangleCubeIndices3 =
 {
                 0,1,2
@@ -62,6 +72,23 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 3,4,0,
                 4,5,0
          };
+        ushort[] triangleCubeIndices7 =
+{
+                0,1,2,
+                2,3,0,
+                3,4,0,
+                4,5,0,
+                5,6,0
+         };
+        ushort[] triangleCubeIndices8 =
+{
+                0,1,2,
+                2,3,0,
+                3,4,0,
+                4,5,0,
+                5,6,0,
+                6,7,0
+         };
 
         Vertices polygon;
         Vector2 centroid;
@@ -72,8 +99,9 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _batch = _screenManager.SpriteBatch;
             _camera = camera;
 
+            //1)Триангуляция текстуры в полигоны
             //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
-            Texture2D alphabet = _screenManager.Content.Load<Texture2D>("Samples/car");
+            Texture2D alphabet = _screenManager.Content.Load<Texture2D>("Samples/object");
 
             uint[] data = new uint[alphabet.Width * alphabet.Height];
             alphabet.GetData(data);
@@ -104,64 +132,71 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
             //========================================================================================================
 
-            #region "LLD"
-            //var temp = _breakableBody.Parts
-            //    .Select(a => ((PolygonShape)(a.Shape)).Vertices)
-            //    .ToList();
-            //IEnumerable<VertexPositionColor> temp2 = new VertexPositionColor[0];
-            //TESTListOfVertices = new List<VertexPositionColor[]>();
-            //for (int i = 0; i < temp.Count; i++)
-            //{
-            //    var tempUnsorted = temp[i]
-            //        .Select(a => new VertexPositionColor(new Vector3(a.X, a.Y, 0f), Color.Crimson))
-            //        .ToArray();
-            //    Array.Sort(tempUnsorted, new ClockwiseVector2Comparer());
-            //    TESTListOfVertices.Add(tempUnsorted);
-            //    temp2 = temp2.Concat(tempUnsorted);
-            //}
-            //triangleVertices = temp2.ToArray();
+            //2)Массивы для индексного рассчета вершин под графен
+            //2.1)лист вершин для каждого полигона
+            var temp = _breakableBody.Parts
+                .Select(a => ((PolygonShape)(a.Shape)).Vertices)
+                .ToList();
+            //2.2)коллекция для подсчета суммарного количества вершин
+            IEnumerable<VertexPositionColor> temp2 = new VertexPositionColor[0];
+            //2.3)буфер вершин под каждый полигон
+            vertexBuffers = new List<VertexBuffer>();
+            //2.4)координаты центров полигонов для сортировки вершин этих полигонов относительно их центров
+            centroids = new List<Vector2>();
+            //2.5)сортированый массив вершин и их цветов полигонов для отрисовки
+            TESTListOfVertices = new List<VertexPositionColor[]>();
+            for (int i = 0; i < temp.Count; i++)
+            {
+                var tempUnsorted = temp[i]
+                    .Select(a => new VertexPositionColor(new Vector3(a.X, a.Y, 0f), Color.Crimson))
+                    .ToArray();              
 
-            //int verticesCount = 0;
-            //foreach (var e in TESTListOfVertices)
-            //{
-            //    verticesCount += e.Length;
-            //}
+                temp2 = temp2.Concat(tempUnsorted);
 
-            //// Создаем буфер вершин
-            //vertexBuffer = new VertexBuffer(
-            //    _screenManager.GraphicsDevice,
-            //    typeof(VertexPositionColor),
-            //    triangleVertices.Length,
-            //    BufferUsage.None);
-            //// установка буфера вершин
-            ////vertexBuffer.SetData(triangleVertices);
-            //// Создаем BasicEffect
-            //effect = new BasicEffect(_screenManager.GraphicsDevice);
-            //effect.VertexColorEnabled = true;
-            #endregion
+                var centr = temp[i].GetCentroid();
+                centroids.Add(centr);
+                
+                TESTListOfVertices.Add(VertexClockwiseSort(tempUnsorted, centr));
+            }
+            triangleVertices = temp2.ToArray();
 
-            vertexPositionColors = new VertexPositionColor[6];
-            vertexPositionColors[0] = new VertexPositionColor(new Vector3(1.064862f, 11.57255f, 0f), Color.DarkCyan);
-            vertexPositionColors[1] = new VertexPositionColor(new Vector3(4.312084f, 0.6741097f, 0f), Color.DarkCyan);
-            vertexPositionColors[2] = new VertexPositionColor(new Vector3(3.384306f, -3.685265f, 0f), Color.DarkCyan);
-            vertexPositionColors[3] = new VertexPositionColor(new Vector3(-3.226111f, -3.685265f, 0f), Color.DarkCyan);
-            vertexPositionColors[4] = new VertexPositionColor(new Vector3(-4.037916f, 0.6741097f, 0f), Color.DarkCyan);
-            vertexPositionColors[5] = new VertexPositionColor(new Vector3(-1.486527f, 11.57255f, 0f), Color.DarkCyan);
+            //(2.2)
+            int verticesCount = 0;
+            foreach (var e in TESTListOfVertices)
+            {
+                verticesCount += e.Length;
+            }
+            //(2.3)
+            foreach (var e in TESTListOfVertices)
+            {
+                var vb = new VertexBuffer(
+                        _screenManager.GraphicsDevice,
+                        typeof(VertexPositionColor),
+                        e.Length,
+                        BufferUsage.None);
+                vb.SetData(e);
+                vertexBuffers.Add(vb);
+            }
 
-            // Создаем буфер вершин
-            vertexBuffer = new VertexBuffer(
-                _screenManager.GraphicsDevice,
-                typeof(VertexPositionColor),
-                vertexPositionColors.Length,
-                BufferUsage.None);
-            // установка буфера вершин
-            vertexBuffer.SetData(vertexPositionColors);
-            // Создаем BasicEffect
             effect = new BasicEffect(_screenManager.GraphicsDevice);
             effect.VertexColorEnabled = true;
 
-            indexBuffer = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
-            indexBuffer.SetData<ushort>(triangleCubeIndices6);
+            //буферы индексов для полигонов с разным числом вершин
+            indexBuffer3 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer3.SetData<ushort>(triangleCubeIndices3);
+            indexBuffer4 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer4.SetData<ushort>(triangleCubeIndices4);
+            indexBuffer5 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer5.SetData<ushort>(triangleCubeIndices5);
+            indexBuffer6 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer6.SetData<ushort>(triangleCubeIndices6);
+            indexBuffer7 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer7.SetData<ushort>(triangleCubeIndices7);
+            indexBuffer8 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(ushort), 36, BufferUsage.WriteOnly);
+            indexBuffer8.SetData<ushort>(triangleCubeIndices8);
+
+            //точка для отрисовки центрода(ТЕСТ)
+            TESTCentroid = new Sprite(_screenManager.Assets.CircleTexture(0.1f, MaterialType.Squares, Color.Black, 1f, 24f));
         }
 
         public virtual void Update(FixedMouseJoint fixedMouseJoint)
@@ -206,96 +241,106 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public BasicEffect effect;
         public void Draw(SpriteBatch batch)
         {
-            #region "LOW LEVEL DRAW"
-            //for (int i = 0; i < TESTListOfVertices.Count; i++)
-            //{
-            //    vertexBuffer.SetData(TESTListOfVertices[i]);
-
-            //    var p = _camera.Projection;
-            //    var v = _camera.View;
-            //    var w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
-            //    w *= Matrix.CreateWorld(
-            //        new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
-            //        new Vector3(0, 0, -2),
-            //        Vector3.Up);
-
-            //    // установка буфера вершин
-            //    _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            //    //установка матриц эффекта
-            //    effect.World = w;
-            //    effect.View = v;
-            //    effect.Projection = p;
-
-            //    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            //    {
-            //        pass.Apply();
-
-            //        _screenManager.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
-            //            PrimitiveType.TriangleList,
-            //            TESTListOfVertices[i],
-            //            0,
-            //            (TESTListOfVertices[i].Length / 3));
-            //    }
-            //}
-            #endregion
-
-            var p = _camera.Projection;
-            var v = _camera.View;
-            var w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
-            w *= Matrix.CreateWorld(
-                new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
-                new Vector3(0, 0, -2),
-                Vector3.Up);
-
-            // установка буфера вершин
-            _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            //установка матриц эффекта
-            effect.World = w;
-            effect.View = v;
-            effect.Projection = p;
-
-            //foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            //{
-            //    pass.Apply();
-
-            //    _screenManager.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
-            //        PrimitiveType.TriangleStrip,
-            //        vertexPositionColors,
-            //        0,
-            //        /*(vertexPositionColors.Length / 3)*/10);
-            //}
-            _screenManager.GraphicsDevice.Indices = indexBuffer;
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            for (int i = 0; i < TESTListOfVertices.Count; i++)
             {
-                pass.Apply();
-                _screenManager.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexPositionColors.Length, 0, vertexPositionColors.Length - 2);
+                var p = _camera.Projection;
+                var v = _camera.View;
+                //поворот и координаты(именно в таком порядке) полигона
+                var w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
+                w *= Matrix.CreateWorld(
+                    new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
+                    new Vector3(0, 0, -2),
+                    Vector3.Up);
+
+                // установка буфера вершин
+                _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffers[i]);
+                //установка матриц эффекта
+                effect.World = w;
+                effect.View = v;
+                effect.Projection = p;
+
+                int _debugger_;
+                if (TESTListOfVertices[i].Length == 3)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer3;
+                else if (TESTListOfVertices[i].Length == 4)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer4;
+                else if (TESTListOfVertices[i].Length == 5)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer5;
+                else if (TESTListOfVertices[i].Length == 6)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer6;
+                else if (TESTListOfVertices[i].Length == 7)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer7;
+                else if (TESTListOfVertices[i].Length == 8)
+                    _screenManager.GraphicsDevice.Indices = indexBuffer8;
+                else
+                    _debugger_ = 0;
+
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    //отрисовка полигона индексированными треугольниками
+                    _screenManager.GraphicsDevice.DrawIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        0,
+                        0,
+                        TESTListOfVertices[i].Length/*число вершин*/, 
+                        0, 
+                        TESTListOfVertices[i].Length - 2/*число треугольников на вершинах*/);
+                }
+
+
+                _batch.Draw(//тестовая точка
+                    TESTCentroid.Texture,
+                    centroids[i],
+                    null,
+                    Color.White,
+                    0f,
+                    TESTCentroid.Origin,
+                    TESTCentroid.Size * TESTCentroid.TexelSize * (1f / 24f),
+                    SpriteEffects.FlipVertically,
+                    0f);
             }
         }
 
-        //public int PolygonsCount()
+        public VertexPositionColor[] VertexClockwiseSort(VertexPositionColor[] vpc, Vector2 centroid)
+        {
+            var test = vpc.Select(a => new TwoVectorsContainer(a, a.Position - new Vector3(centroid.X, centroid.Y, 0f))).ToArray();
+            Array.Sort(test, new ClockwiseVector2Comparer());
+            return test.Select(b => b.origin).ToArray();
+        }
+
     }
 
-    public class ClockwiseVector2Comparer : IComparer<VertexPositionColor>
+    public class TwoVectorsContainer//контейнер для сортировки вершин относительно центройда их полигона
     {
-        public int Compare(VertexPositionColor v1, VertexPositionColor v2)
+        public VertexPositionColor origin;
+        public Vector3 offseted;
+
+        public TwoVectorsContainer(VertexPositionColor v1, Vector3 v2)
         {
-            if (v1.Position.X >= 0)
-            {
-                if (v2.Position.X < 0)
-                {
-                    return -1;
-                }
-                return -Comparer<float>.Default.Compare(v1.Position.Y, v2.Position.Y);
-            }
-            else
-            {
-                if (v2.Position.X >= 0)
-                {
-                    return 1;
-                }
-                return Comparer<float>.Default.Compare(v1.Position.Y, v2.Position.Y);
-            }
+            origin = v1;
+            offseted = v2;
+        }
+    }
+
+    //сортировка относительно центра полигона, а не центра поля!!!!
+    public class ClockwiseVector2Comparer : IComparer<TwoVectorsContainer>
+    {
+        public int Compare(TwoVectorsContainer v1, TwoVectorsContainer v2)
+        {
+            //координаты радиус векторов до точек равны координатам точек
+            var point1 = (TwoVectorsContainer)v1;
+            var point2 = (TwoVectorsContainer)v2;
+
+            double angle1 = Math.Atan2(point1.offseted.Y, point1.offseted.X);
+            double angle2 = Math.Atan2(point2.offseted.Y, point2.offseted.X);
+
+            //на выходе угол получается в диапазоне от -pi до pi,
+            //а нужно в диапазоне от 0 до 2pi 
+            if (angle1 < 0) angle1 += 2 * Math.PI;
+            if (angle2 < 0) angle2 += 2 * Math.PI;
+
+            return angle2.CompareTo(angle1);
         }
     }
 }

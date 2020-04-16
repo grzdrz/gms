@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/arrow.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/buttons.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/cursor.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/gradient.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/logo.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/popup.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/slider.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/socket.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/stick.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Effects/LightEffect.fx</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/blank.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/dots.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/pavement.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/squares.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/waves.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/alphabet.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/car.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/goo.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/link.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/object.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/wheel.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/virus1.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/virus2.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

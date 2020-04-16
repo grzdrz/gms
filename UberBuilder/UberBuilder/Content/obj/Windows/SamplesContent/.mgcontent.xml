@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Materials/blank.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/gradient.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/logo.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Effects/LightEffect.fx</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Materials/dots.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Materials/pavement.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Materials/squares.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Materials/waves.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/alphabet.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/object.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/cursor.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/popup.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/arrow.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/slider.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/link.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/goo.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/car.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Samples/wheel.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/socket.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/stick.png</File>
+    <File>C:/Users/user/Music/SpaceRuner/Samples/SamplesContent/Common/buttons.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

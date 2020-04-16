@@ -76,6 +76,7 @@
     <Compile Include="GameSystem\ConstructionMaterials\Brick.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Cement.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Glass.cs" />
+    <Compile Include="GameSystem\ConstructionMaterials\SegmentableBody.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Wood.cs" />
     <Compile Include="GameSystem\ControllableCharacters\UberBuilder.cs" />
     <Compile Include="GameSystem\GameLevel1.cs" />

@@ -25,14 +25,8 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public ScreenManager _screenManager;
         public Camera2D _camera;
 
-        public BreakableBody _breakableBody;
+        public SegmentableBody _breakableBody;
         public SpriteBatch _batch;
-
-        //public List<Sprite> _bodySprites;
-        //public Sprite _mainBodySprite;
-
-        //public List<Vector2> _bodiesPositions;
-        //public List<Body> _particialBodies;
 
         public PrimitiveBatch batch;
         public List<Vertices> verticesList;
@@ -41,6 +35,9 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public List<VertexBuffer> vertexBuffers;
         public List<Vector2> centroids;
         public Sprite TESTCentroid;
+        public VertexPositionColor[] triangleVertices;
+        public VertexBuffer vertexBuffer;
+        public BasicEffect effect;
 
         IndexBuffer indexBuffer3;
         IndexBuffer indexBuffer4;
@@ -125,7 +122,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 foreach (Vertices vertices in triangulated)
                     vertices.Scale(ref vertScale);
 
-                _breakableBody = new BreakableBody(_world, triangulated, 1);
+                _breakableBody = new SegmentableBody(_world, triangulated, 1);
                 _breakableBody.MainBody.Position = new Vector2(0, 0);
                 _breakableBody.Strength = 500;
             }
@@ -201,7 +198,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
         public virtual void Update(FixedMouseJoint fixedMouseJoint)
         {
-            if (_breakableBody.State == BreakableBody.BreakableBodyState.ShouldBreak)
+            if (_breakableBody.State == SegmentableBody.BreakableBodyState.ShouldBreak)
             {
                 // save MouseJoint position
                 Vector2? worldAnchor = null;
@@ -236,9 +233,6 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             }
         }
 
-        public VertexPositionColor[] triangleVertices;
-        public VertexBuffer vertexBuffer;
-        public BasicEffect effect;
         public void Draw(SpriteBatch batch)
         {
             for (int i = 0; i < TESTListOfVertices.Count; i++)
@@ -246,11 +240,26 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 var p = _camera.Projection;
                 var v = _camera.View;
                 //поворот и координаты(именно в таком порядке) полигона
-                var w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
-                w *= Matrix.CreateWorld(
-                    new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
-                    new Vector3(0, 0, -2),
-                    Vector3.Up);
+                Matrix w;
+                if (_breakableBody.State == SegmentableBody.BreakableBodyState.Unbroken)
+                {
+                    w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
+                    w *= Matrix.CreateWorld(
+                        new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
+                        new Vector3(0, 0, -2),
+                        Vector3.Up);
+                }
+                else 
+                {
+                    w = Matrix.CreateRotationZ(/*_world.BodyList[i + 2]*/_breakableBody._bodiesAfterSegmented[i].Rotation);
+                    w *= Matrix.CreateWorld(
+                        new Vector3(
+                            /*_world.BodyList[i + 2]*/_breakableBody._bodiesAfterSegmented[i].Position.X,
+                            /*_world.BodyList[i + 2]*/_breakableBody._bodiesAfterSegmented[i].Position.Y,
+                            0f),
+                        new Vector3(0, 0, -2),
+                        Vector3.Up);
+                }
 
                 // установка буфера вершин
                 _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffers[i]);

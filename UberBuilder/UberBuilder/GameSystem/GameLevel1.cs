@@ -24,7 +24,7 @@ namespace UberBuilder.GameSystem
     public class GameLevel1 : PhysicsGameScreen//, IDemoScreen
     {
         public Border _border;
-        public BreakableObj _breakableObj;
+        public BreakableObj1 _breakableObj;
 
         #region IDemoScreen Members
 
@@ -61,13 +61,13 @@ namespace UberBuilder.GameSystem
         {
             base.LoadContent();
 
-            DebugView.AppendFlags(DebugViewFlags.Shape);
+            //DebugView.AppendFlags(DebugViewFlags.Shape);
 
             World.Gravity = Vector2.Zero;
 
             _border = new Border(World, ScreenManager, Camera);
 
-            _breakableObj = new BreakableObj(World, ScreenManager, new Vector2(0, 0), Camera);
+            _breakableObj = new BreakableObj1(World, ScreenManager, new Vector2(0, 0), Camera);
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -118,7 +118,7 @@ namespace UberBuilder.GameSystem
 
         public override void UnloadContent()
         {
-            DebugView.RemoveFlags(DebugViewFlags.Shape);
+            //DebugView.RemoveFlags(DebugViewFlags.Shape);
 
             base.UnloadContent();
         }

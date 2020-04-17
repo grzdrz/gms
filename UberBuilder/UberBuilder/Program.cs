@@ -1,4 +1,5 @@
-﻿using System;
+﻿using First3DGame;
+using System;
 
 namespace UberBuilder
 {
@@ -14,7 +15,7 @@ namespace UberBuilder
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new Game1/*GameTEST*/())
                 game.Run();
         }
     }

@@ -73,6 +73,7 @@
     <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\BreakableObj.cs" />
+    <Compile Include="GameSystem\ConstructionMaterials\BreakableObj1.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Brick.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Cement.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Glass.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="ScreenSystem\testSS\ScreenManager.cs" />
     <Compile Include="ScreenSystem\VirtualButton.cs" />
     <Compile Include="ScreenSystem\VirtualStick.cs" />
+    <Compile Include="TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Aether.Physics2D, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">

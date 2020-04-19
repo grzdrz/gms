@@ -21,6 +21,7 @@ using UberBuilder.GameSystem.StaticGameObjects;
 using UberBuilder.GameSystem.ControllableCharacters;
 using tainicom.Aether.Physics2D.Samples.DrawingSystem;
 using tainicom.Aether.Physics2D.Dynamics;
+using System.IO;
 
 namespace UberBuilder.GameSystem
 {
@@ -35,8 +36,9 @@ namespace UberBuilder.GameSystem
         public WoodBlock _woodBlock;
         public UBuilder _uberBuilder;
 
-        public Dictionary<int, Body> _throwTrajectory;
-        public Sprite dots;
+        public ThrowTrajectory _throwTrajectory;
+
+        public BuildingSilhouette _silhouette;
 
         #region IDemoScreen Members
 
@@ -72,6 +74,7 @@ namespace UberBuilder.GameSystem
         public override void LoadContent()
         {
             base.LoadContent();
+            HasCursor = true;
 
             var vp = ScreenManager.GraphicsDevice.Viewport;
             _height = 30f; // 30 meters height
@@ -101,9 +104,18 @@ namespace UberBuilder.GameSystem
                 new Vector2(-halfWidth + 10f, -halfHeight + 10f),
                 Camera);
 
-            dots = new Sprite(ScreenManager.Assets.CircleTexture(1f, MaterialType.Blank, Color.Red, 1f, 24f));
+            _throwTrajectory = new ThrowTrajectory(
+                World,
+                ScreenManager);
 
-            _throwTrajectory = new Dictionary<int, Body>();
+
+            _silhouette = new BuildingSilhouette(
+                World,
+                ScreenManager,
+                new Vector2(this._halfHeight / 2f, 0f),
+                Camera,
+                new Vector2(20f, 30f)
+                /*"silhouettePath",*/);
         }
 
         public bool ThrowIsCalculated = false;
@@ -113,44 +125,10 @@ namespace UberBuilder.GameSystem
 
             _woodBlock.Update(this._fixedMouseJoint);
             _uberBuilder.Update();
+            _throwTrajectory.Update(this);
+            _silhouette.Update();
 
-            if (isMouseLeftButtonPressed == IsMouseLeftButtonPressed.Yes)
-            {
-                throwForce = (_uberBuilder._originPosition - bodyToThrow.Position) * 500f;
-                bodyToThrow.Rotation = 0f;
-
-                //обновления объектов траектории один раз после остановки бросаемого объекта
-                if (_uberBuilder._body.LinearVelocity.Length() > new Vector2(0.5f, 0.5f).Length()) ThrowIsCalculated = false;
-                if (_uberBuilder._body.LinearVelocity.Length() <= new Vector2(0.5f, 0.5f).Length() && !ThrowIsCalculated)
-                {
-                    ThrowIsCalculated = true;
-                    for (int j = 0; j < 5; j++)
-                    {
-                        if (_throwTrajectory.ContainsKey(j))
-                        {
-                            World.Remove(_throwTrajectory[j]);
-                            _throwTrajectory.Remove(j);
-                        }
-
-                        _throwTrajectory[j] = World.CreateCircle(1f, 1f, _uberBuilder._body.Position, BodyType.Dynamic);
-                        Category c = (Category)((int)Math.Pow(2, (j + 2)));
-                        _throwTrajectory[j].SetCollisionCategories(c);
-                        _throwTrajectory[j].SetCollidesWith(c);
-                        _throwTrajectory[j].ApplyForce(throwForce);
-                    }
-                }
-            }
-
-            //стопорит объекты траектории на определенном расстоянии от бросаемого объекта
-            int i = 1;
-            foreach (var e in _throwTrajectory)
-            {
-                if (Math.Abs((e.Value.Position - _uberBuilder._body.Position).Length()) > (float)i * 5f)/*!!!*/
-                {
-                    e.Value.BodyType = BodyType.Static;
-                }
-                i++;
-            }
+            if (IsGameEnd) FinalMoveCameraToSilhouette();
         }
 
         public override void Draw(GameTime gameTime)
@@ -161,27 +139,12 @@ namespace UberBuilder.GameSystem
 
             _woodBlock.Draw(ScreenManager.SpriteBatch);
             _uberBuilder.Draw();
-
-            if (isMouseLeftButtonPressed == IsMouseLeftButtonPressed.Yes)
-            {
-                //for (int i = 0; i < _throwTrajectory.Count; i++)
-                //{
-                //    ScreenManager.SpriteBatch.Draw(
-                //        dots.Texture,
-                //        _throwTrajectory[i].Position,
-                //        null,
-                //        Color.White,
-                //        _throwTrajectory[i].Rotation,
-                //        dots.Origin,
-                //        dots.Size * dots.TexelSize * (1f / 24f),
-                //        SpriteEffects.FlipVertically,
-                //        0f);
-                //}
-            }
+            _throwTrajectory.Draw(isMouseLeftButtonPressed);
+            _silhouette.Draw(ScreenManager.SpriteBatch);
 
             ScreenManager.SpriteBatch.End();
 
-            _border.Draw();
+            if(!IsGameEnd)_border.Draw();
             base.Draw(gameTime);
         }
 
@@ -229,6 +192,7 @@ namespace UberBuilder.GameSystem
 
         protected override void HandleCursor(InputHelper input)
         {
+            #region "Захват тела и создание объектов-траектории для него"
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);
 
             if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
@@ -267,13 +231,58 @@ namespace UberBuilder.GameSystem
 
             if (_fixedMouseJoint != null)
                 _fixedMouseJoint.WorldAnchorB = position;
+            #endregion
+
+            #region "Смещение камеры к силуэту, его снимок и обработка"
+            if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
+            {
+                IsGameEnd = true;
+                HasCursor = false;
+
+
+                #region "save png"
+                //int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                //int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+                //////force a frame to be drawn (otherwise back buffer is empty) 
+                ////Draw(new GameTime());
+
+                ////pull the picture from the buffer 
+                //int[] backBuffer = new int[w * h];
+                //ScreenManager.GraphicsDevice.GetBackBufferData(backBuffer);
+
+                ////copy into a texture 
+                //Texture2D texture = new Texture2D(
+                //    ScreenManager.GraphicsDevice,
+                //    w, h,
+                //    false,
+                //    ScreenManager.GraphicsDevice.PresentationParameters.BackBufferFormat);
+                //texture.SetData(backBuffer);
+
+                ////save to disk 
+                //Stream stream = File.OpenWrite("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\1.png");
+
+                //texture.SaveAsPng(stream, w, h);
+                //stream.Dispose();
+
+                //texture.Dispose();
+                #endregion
+
+            }
+            #endregion
         }
 
-        public enum IsMouseLeftButtonPressed
+        public bool IsGameEnd = false;
+        public void FinalMoveCameraToSilhouette()
         {
-            Yes,
-            No
+            if (Camera.Position.X < _silhouette._body.Position.X) Camera.MoveCamera(new Vector2(0.1f, 0f));
         }
+    }
+
+    public enum IsMouseLeftButtonPressed
+    {
+        Yes,
+        No
     }
 }
 

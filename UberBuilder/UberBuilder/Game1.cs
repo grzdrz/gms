@@ -93,7 +93,7 @@ namespace UberBuilder
             //menuScreen.AddMenuItem(advancedDemo5.GetTitle(), EntryType.Screen, advancedDemo5);
 
             menuScreen.AddMenuItem("", EntryType.Separator, null);
-            menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
+            menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);  
 
             ScreenManager.AddScreen(new BackgroundScreen());
             ScreenManager.AddScreen(menuScreen);

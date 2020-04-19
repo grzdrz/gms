@@ -78,10 +78,11 @@
     <Compile Include="GameSystem\ConstructionMaterials\Cement.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Glass.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\SegmentableBody.cs" />
-    <Compile Include="GameSystem\ConstructionMaterials\Wood.cs" />
+    <Compile Include="GameSystem\ConstructionMaterials\WoodBlock.cs" />
     <Compile Include="GameSystem\ControllableCharacters\UberBuilder.cs" />
     <Compile Include="GameSystem\GameLevel1.cs" />
     <Compile Include="GameSystem\StaticGameObjects\GameBorders.cs" />
+    <Compile Include="GameSystem\TESTScreen.cs" />
     <Compile Include="GameSystem\_TEST_Objects\BodyWithJetEngineTEST.cs" />
     <Compile Include="GameSystem\_TEST_Objects\GameLevel.cs" />
     <Compile Include="GameSystem\_TEST_Objects\MainCharacter.cs" />
@@ -135,6 +136,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\wood2.png" />
     <Content Include="Content\Common\arrow.png" />
     <Content Include="Content\Common\buttons.png" />
     <Content Include="Content\Common\cursor.png" />
@@ -178,8 +180,7 @@
     <Content Include="Content\Samples\link.png" />
     <Content Include="Content\Samples\object.png" />
     <Content Include="Content\Samples\wheel.png" />
-    <Content Include="Content\virus1.png" />
-    <Content Include="Content\virus2.png" />
+    <Content Include="Content\woodBlock1.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

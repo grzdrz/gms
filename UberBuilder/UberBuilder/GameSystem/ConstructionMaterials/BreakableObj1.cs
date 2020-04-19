@@ -25,20 +25,15 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public ScreenManager _screenManager;
         public Camera2D _camera;
 
-        public SegmentableBody _breakableBody;
-        public SpriteBatch _batch;
+        public SegmentableBody _breakableBody { get; set; }
+        public List<VertexPositionTexture[]> TESTListOfVertices { get; set; }
+        public List<VertexBuffer> vertexBuffers { get; set; }
+        public VertexPositionTexture[] triangleVertices { get; set; }
+        public BasicEffect effect { get; set; }
+        public Texture2D texture { get; set; }
 
-        public PrimitiveBatch batch;
-        public List<Vertices> verticesList;
-        public VertexPositionTexture[] vertexPositionColors;
-        public List<VertexPositionTexture[]> TESTListOfVertices;
-        public List<VertexBuffer> vertexBuffers;
-        public List<Vector2> centroids;
-        public Sprite TESTCentroid;
-        public VertexPositionTexture[] triangleVertices;
-        public VertexBuffer vertexBuffer;
-        public BasicEffect effect;
-        public Texture2D texture;
+        public List<Vector2> centroids { get; set; }
+        public Sprite TESTCentroid { get; set; }
 
         IndexBuffer indexBuffer3;
         IndexBuffer indexBuffer4;
@@ -46,50 +41,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         IndexBuffer indexBuffer6;
         IndexBuffer indexBuffer7;
         IndexBuffer indexBuffer8;
-        //индексы вершин(отсортированных по часовой относительно своего центройда) 
-        //порядок которых означает посрядок отрисовки треугольников
-//        ushort[] triangleCubeIndices3 =
-//{
-//                0,1,2
-//         };
-//        ushort[] triangleCubeIndices4 =
-//{
-//                0,1,2,
-//                2,3,0
-//         };
-//        ushort[] triangleCubeIndices5 =
-//{
-//                0,1,2,
-//                2,3,0,
-//                3,4,0
-//         };
-//        ushort[] triangleCubeIndices6 =
-//        {
-//                0,1,2,
-//                2,3,0,
-//                3,4,0,
-//                4,5,0
-//         };
-//        ushort[] triangleCubeIndices7 =
-//{
-//                0,1,2,
-//                2,3,0,
-//                3,4,0,
-//                4,5,0,
-//                5,6,0
-//         };
-//        ushort[] triangleCubeIndices8 =
-//{
-//                0,1,2,
-//                2,3,0,
-//                3,4,0,
-//                4,5,0,
-//                5,6,0,
-//                6,7,0
-//         };
 
-        //индексы вершин(отсортированных по часовой относительно своего центройда) 
-        //порядок которых означает посрядок отрисовки треугольников
         short[] triangleCubeIndices3_1 =
 {
                 0,1,2
@@ -130,14 +82,17 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 6,7,0
          };
 
-        Vertices polygon;
+        Vertices polygon { get; set; }
         Vector2 centroid;
-        public BreakableObj1(World world, ScreenManager screenManager, Vector2 position, Camera2D camera)
+
+        string _texturePath;
+        public BreakableObj1(World world, ScreenManager screenManager, Vector2 position, Camera2D camera, string texturePath, TriangulationAlgorithm triangulationAlgorithm)
         {
             _world = world;
             _screenManager = screenManager;
-            _batch = _screenManager.SpriteBatch;
+            //_batch = _screenManager.SpriteBatch;
             _camera = camera;
+            _texturePath = texturePath;
 
             var vp = screenManager.GraphicsDevice.Viewport;
             float height = 30f; // 30 meters height
@@ -149,7 +104,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
             //1)Триангуляция текстуры в полигоны
             //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
-            Texture2D alphabet = _screenManager.Content.Load<Texture2D>("Samples/object");
+            Texture2D alphabet = _screenManager.Content.Load<Texture2D>(_texturePath);
 
             uint[] data = new uint[alphabet.Width * alphabet.Height];
             alphabet.GetData(data);
@@ -167,15 +122,15 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 polygon.Translate(ref centroid);
                 polygon = SimplifyTools.CollinearSimplify(polygon);
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
-                triangulated = Triangulate.ConvexPartition(polygon, TriangulationAlgorithm.Bayazit);
+                triangulated = Triangulate.ConvexPartition(polygon, triangulationAlgorithm);
 
                 Vector2 vertScale = new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height);
                 foreach (Vertices vertices in triangulated)
                     vertices.Scale(ref vertScale);
 
                 _breakableBody = new SegmentableBody(_world, triangulated, 1);
-                _breakableBody.MainBody.Position = new Vector2(0, 0);
-                _breakableBody.Strength = 500;
+                _breakableBody.MainBody.Position = /*new Vector2(0, 0)*/position;
+                _breakableBody.Strength = 1200;
             }
 
             //========================================================================================================
@@ -229,47 +184,6 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                     temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y + downOffsetFromZero) / ((height + downOffsetFromZero));
                 }
 
-                #region "TEST1"
-                //if (leftOffsetFromZero < 0 && downOffsetFromZero >= 0)
-                //{
-                //    for (int j = 0; j < temp3.Length; j++)
-                //    {
-                //        temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X + Math.Abs(leftOffsetFromZero)) / (width / 2f);
-                //        temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y /*+ Math.Abs(downOffsetFromZero)*/) / (height / 2f);
-                //    }
-                //}
-                //else if (leftOffsetFromZero >= 0 && downOffsetFromZero < 0)
-                //{
-                //    for (int j = 0; j < temp3.Length; j++)
-                //    {
-                //        temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X /*+ Math.Abs(leftOffsetFromZero)*/) / (width / 2f);
-                //        temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y + Math.Abs(downOffsetFromZero)) / (height / 2f);
-                //    }
-                //}
-                //else if (leftOffsetFromZero < 0 && downOffsetFromZero < 0)
-                //{
-                //    for (int j = 0; j < temp3.Length; j++)
-                //    {
-                //        temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X + Math.Abs(leftOffsetFromZero)) / (width / 2f);
-                //        temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y + Math.Abs(downOffsetFromZero)) / (height / 2f);
-                //    }
-                //}
-                //else 
-                //{
-                //    for (int j = 0; j < temp3.Length; j++)
-                //    {
-                //        temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X /*+ Math.Abs(leftOffsetFromZero)*/) / (width / 2f);
-                //        temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y /*+ Math.Abs(downOffsetFromZero)*/) / (height / 2f);
-                //    }
-                //}
-
-                //for (int j = 0; j < temp3.Length; j++)
-                //{
-                //    temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X + 5f) / (width / 2f);
-                //    temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y + 3f) / (height / 2f);
-                //}
-                #endregion
-
                 TESTListOfVertices.Add(temp3);
             }
             triangleVertices = temp2.ToArray();
@@ -293,8 +207,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             }
 
             effect = new BasicEffect(_screenManager.GraphicsDevice);
-            //effect.VertexColorEnabled = true;
-            texture = _screenManager.Content.Load<Texture2D>("wood");
+            texture = _screenManager.Content.Load<Texture2D>("wood2");
             effect.TextureEnabled = true;
             effect.Texture = texture;
 
@@ -426,14 +339,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    //отрисовка полигона индексированными треугольниками
-                    //_screenManager.GraphicsDevice.DrawIndexedPrimitives(
-                    //    PrimitiveType.TriangleList,
-                    //    0,
-                    //    0,
-                    //    TESTListOfVertices[i].Length/*число вершин*/,
-                    //    0,
-                    //    TESTListOfVertices[i].Length - 2/*число треугольников на вершинах*/);
+
                     _screenManager.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
                         PrimitiveType.TriangleList,
                         TESTListOfVertices[i],
@@ -445,16 +351,16 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 }
 
 
-                _batch.Draw(//тестовая точка
-                    TESTCentroid.Texture,
-                    centroids[i],
-                    null,
-                    Color.White,
-                    0f,
-                    TESTCentroid.Origin,
-                    TESTCentroid.Size * TESTCentroid.TexelSize * (1f / 24f),
-                    SpriteEffects.FlipVertically,
-                    0f);
+                //_batch.Draw(//тестовая точка
+                //    TESTCentroid.Texture,
+                //    centroids[i],
+                //    null,
+                //    Color.White,
+                //    0f,
+                //    TESTCentroid.Origin,
+                //    TESTCentroid.Size * TESTCentroid.TexelSize * (1f / 24f),
+                //    SpriteEffects.FlipVertically,
+                //    0f);
             }
         }
 

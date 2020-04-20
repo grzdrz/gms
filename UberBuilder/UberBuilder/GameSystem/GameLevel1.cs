@@ -85,7 +85,7 @@ namespace UberBuilder.GameSystem
             float halfWidth = _halfWidth = _width / 2f;
             float halfHeight = _halfHeight = _height / 2f;
 
-            DebugView.AppendFlags(DebugViewFlags.Shape);
+            //DebugView.AppendFlags(DebugViewFlags.Shape);
 
             World.Gravity = /*Vector2.Zero*/new Vector2(0, -9.82f);
 
@@ -131,7 +131,14 @@ namespace UberBuilder.GameSystem
             _throwTrajectory.Update(this);
             _silhouette.Update();
 
-            if (IsGameEnd) FinalMoveCameraToSilhouette();
+            if (IsGameEnd) ScreenOfFinalBuilding();
+            if (IsCameCanMove)
+            {
+                if (Camera.Position.X < _silhouette._body.Position.X)
+                    Camera.MoveCamera(new Vector2(0.05f, 0f));
+                else IsCameCanMove = false;
+            }
+            
             //if(IsGameEnd) ((Game1)ScreenManager.Game).background.
         }
 
@@ -156,7 +163,7 @@ namespace UberBuilder.GameSystem
 
         public override void UnloadContent()
         {
-            DebugView.RemoveFlags(DebugViewFlags.Shape);
+            //DebugView.RemoveFlags(DebugViewFlags.Shape);
 
             base.UnloadContent();
         }
@@ -250,11 +257,11 @@ namespace UberBuilder.GameSystem
 
         public bool IsGameEnd = false;
         public bool IsColorArrayProcessed = false;
-        public void FinalMoveCameraToSilhouette()
+        public bool IsCameCanMove = false;
+        public async void ScreenOfFinalBuilding()
         {
-            //if (Camera.Position.X < _silhouette._body.Position.X) Camera.MoveCamera(new Vector2(0.1f, 0f));
-            //else
-            //{
+            await Task.Run(() =>
+            {
                 if (!IsColorArrayProcessed)
                 {
                     IsColorArrayProcessed = true;
@@ -303,26 +310,45 @@ namespace UberBuilder.GameSystem
                             // Assumes row major ordering of the array.
                             rawDataAsGrid[row, column] = colors[row * w1 + column];
 
-                            bitmap.SetPixel(
+                            if (rawDataAsGrid[row, column].R >= 40 && rawDataAsGrid[row, column].R <= 70 &&
+                                rawDataAsGrid[row, column].G >= 80 && rawDataAsGrid[row, column].G <= 110 &&
+                                rawDataAsGrid[row, column].B >= 100 && rawDataAsGrid[row, column].B <= 135)
+                            {
+                                bitmap.SetPixel(
                                 column,
                                 row,
-                                System.Drawing.Color.FromArgb(
-                                    rawDataAsGrid[row, column].A,
-                                    rawDataAsGrid[row, column].R,
-                                    rawDataAsGrid[row, column].G,
-                                    rawDataAsGrid[row, column].B));
+                                System.Drawing.Color.FromArgb(255, 255, 255, 255));
+                            }
+                            else
+                            {
+                                bitmap.SetPixel(
+                                column,
+                                row,
+                                System.Drawing.Color.FromArgb(255, 0, 0, 0));
+                            }
+
+                            //bitmap.SetPixel(
+                            //    column,
+                            //    row,
+                            //    System.Drawing.Color.FromArgb(
+                            //    rawDataAsGrid[row, column].A,
+                            //    rawDataAsGrid[row, column].R,
+                            //    rawDataAsGrid[row, column].G,
+                            //    rawDataAsGrid[row, column].B));
                         }
                     }
 
+                    //System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
                     using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\1.png", FileMode.Create, FileAccess.ReadWrite))
                     {
                         bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
                     }
-
                     texture.Dispose();
-                    #endregion
                 }
-            //}
+            });
+
+            IsCameCanMove = true;//запуск движения камеры
+            #endregion
         }
 
 
@@ -333,17 +359,13 @@ namespace UberBuilder.GameSystem
         Sprite testDot;
         public void TEST()
         {
-            //positionInPixels = (_silhouette._body.Position + new Vector2(this._halfWidth, this._halfHeight)) * 24f;
-            //rectBorderOfObjCoords = new Vector2();
-            //rectBorderOfObjCoords.X = positionInPixels.X - (_silhouette._sprite.Size.X / 2f);
-            //rectBorderOfObjCoords.Y = positionInPixels.Y + (_silhouette._sprite.Size.Y / 2f);
             positionInPixels = _silhouette._body.Position;
             rectBorderOfObjCoords = new Vector2();
             rectBorderOfObjCoords.X = positionInPixels.X - (_silhouette._sprite.Size.X * (1f / 24f) / 2f);
             rectBorderOfObjCoords.Y = positionInPixels.Y + (_silhouette._sprite.Size.Y * (1f / 24f) / 2f);
 
 
-            testDot = new Sprite(ScreenManager.Assets.CircleTexture(2f, MaterialType.Blank, Color.Black, 1f, 24f));
+            testDot = new Sprite(ScreenManager.Assets.CircleTexture(1f, MaterialType.Blank, Color.Black, 1f, 24f));
         }
         public void TESTDraw()
         {

@@ -20,7 +20,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         private const float LogoScreenBorderRatio = 0.0375f;
         private const float LogoWidthHeightRatio = 1.4f;
 
-        private Texture2D _backgroundTexture;
+        public Texture2D _backgroundTexture;
         private Rectangle _logoDestination;
         private Texture2D _logoTexture;
         private Rectangle _viewport;

@@ -48,6 +48,7 @@ namespace UberBuilder
         }
 
         public ScreenManager ScreenManager { get; set; }
+        public BackgroundScreen background;
 
         protected override void Initialize()
         {
@@ -95,7 +96,7 @@ namespace UberBuilder
             menuScreen.AddMenuItem("", EntryType.Separator, null);
             menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);  
 
-            ScreenManager.AddScreen(new BackgroundScreen());
+            ScreenManager.AddScreen(background = new BackgroundScreen());
             ScreenManager.AddScreen(menuScreen);
             ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(3.0)));
         }

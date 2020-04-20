@@ -22,6 +22,7 @@ using UberBuilder.GameSystem.ControllableCharacters;
 using tainicom.Aether.Physics2D.Samples.DrawingSystem;
 using tainicom.Aether.Physics2D.Dynamics;
 using System.IO;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace UberBuilder.GameSystem
 {
@@ -112,10 +113,12 @@ namespace UberBuilder.GameSystem
             _silhouette = new BuildingSilhouette(
                 World,
                 ScreenManager,
-                new Vector2(this._halfHeight / 2f, 0f),
+                new Vector2(this._halfHeight / 2f, 0f)/*new Vector2(0f, 0f)*/,
                 Camera,
                 new Vector2(20f, 30f)
                 /*"silhouettePath",*/);
+
+            TEST();
         }
 
         public bool ThrowIsCalculated = false;
@@ -129,6 +132,7 @@ namespace UberBuilder.GameSystem
             _silhouette.Update();
 
             if (IsGameEnd) FinalMoveCameraToSilhouette();
+            //if(IsGameEnd) ((Game1)ScreenManager.Game).background.
         }
 
         public override void Draw(GameTime gameTime)
@@ -141,6 +145,8 @@ namespace UberBuilder.GameSystem
             _uberBuilder.Draw();
             _throwTrajectory.Draw(isMouseLeftButtonPressed);
             _silhouette.Draw(ScreenManager.SpriteBatch);
+
+            TESTDraw();
 
             ScreenManager.SpriteBatch.End();
 
@@ -237,46 +243,133 @@ namespace UberBuilder.GameSystem
             if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
             {
                 IsGameEnd = true;
-                HasCursor = false;
-
-
-                #region "save png"
-                //int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
-                //int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
-
-                //////force a frame to be drawn (otherwise back buffer is empty) 
-                ////Draw(new GameTime());
-
-                ////pull the picture from the buffer 
-                //int[] backBuffer = new int[w * h];
-                //ScreenManager.GraphicsDevice.GetBackBufferData(backBuffer);
-
-                ////copy into a texture 
-                //Texture2D texture = new Texture2D(
-                //    ScreenManager.GraphicsDevice,
-                //    w, h,
-                //    false,
-                //    ScreenManager.GraphicsDevice.PresentationParameters.BackBufferFormat);
-                //texture.SetData(backBuffer);
-
-                ////save to disk 
-                //Stream stream = File.OpenWrite("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\1.png");
-
-                //texture.SaveAsPng(stream, w, h);
-                //stream.Dispose();
-
-                //texture.Dispose();
-                #endregion
-
+                HasCursor = false;   
             }
             #endregion
         }
 
         public bool IsGameEnd = false;
+        public bool IsColorArrayProcessed = false;
         public void FinalMoveCameraToSilhouette()
         {
-            if (Camera.Position.X < _silhouette._body.Position.X) Camera.MoveCamera(new Vector2(0.1f, 0f));
+            //if (Camera.Position.X < _silhouette._body.Position.X) Camera.MoveCamera(new Vector2(0.1f, 0f));
+            //else
+            //{
+                if (!IsColorArrayProcessed)
+                {
+                    IsColorArrayProcessed = true;
+
+                    #region "save texture segment to png file"
+                    int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                    int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+                    //pull the picture from the buffer 
+                    int[] backBuffer = new int[w * h];
+                    ScreenManager.GraphicsDevice.GetBackBufferData(backBuffer);
+
+                    //copy into a texture 
+                    Texture2D texture = new Texture2D(
+                        ScreenManager.GraphicsDevice,
+                        w, h,
+                        false,
+                        ScreenManager.GraphicsDevice.PresentationParameters.BackBufferFormat);
+                    texture.SetData(backBuffer);
+
+                    Vector2 positionInPixels = (_silhouette._body.Position + new Vector2(this._halfWidth, this._halfHeight)) * 24f;
+                    int w1 = (int)(_silhouette._sprite.Size.X);
+                    int h1 = (int)(_silhouette._sprite.Size.Y) - 2;
+                    Vector2 rectBorderOfObjCoords = new Vector2();
+                    rectBorderOfObjCoords.X = positionInPixels.X - (w1 / 2f);
+                    rectBorderOfObjCoords.Y = positionInPixels.Y + (h1 / 2f);
+                    Color[] colors = new Color[w1 * h1];
+                    texture.GetData<Color>(
+                        0,
+                        new Rectangle(
+                            (int)(rectBorderOfObjCoords.X) + 20,
+                            /*(int)(rectBorderOfObjCoords.Y)*/0,
+                            w1,
+                            h1),
+                        colors,
+                        0,
+                        w1 * h1);
+
+
+                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(w1, h1);
+                    Color[,] rawDataAsGrid = new Color[h1, w1];
+                    for (int row = 0; row < h1; row++)
+                    {
+                        for (int column = 0; column < w1; column++)
+                        {
+                            // Assumes row major ordering of the array.
+                            rawDataAsGrid[row, column] = colors[row * w1 + column];
+
+                            bitmap.SetPixel(
+                                column,
+                                row,
+                                System.Drawing.Color.FromArgb(
+                                    rawDataAsGrid[row, column].A,
+                                    rawDataAsGrid[row, column].R,
+                                    rawDataAsGrid[row, column].G,
+                                    rawDataAsGrid[row, column].B));
+                        }
+                    }
+
+                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\1.png", FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+
+                    texture.Dispose();
+                    #endregion
+                }
+            //}
         }
+
+
+
+        #region "TEST DOTS"
+        Vector2 positionInPixels;
+        Vector2 rectBorderOfObjCoords;
+        Sprite testDot;
+        public void TEST()
+        {
+            //positionInPixels = (_silhouette._body.Position + new Vector2(this._halfWidth, this._halfHeight)) * 24f;
+            //rectBorderOfObjCoords = new Vector2();
+            //rectBorderOfObjCoords.X = positionInPixels.X - (_silhouette._sprite.Size.X / 2f);
+            //rectBorderOfObjCoords.Y = positionInPixels.Y + (_silhouette._sprite.Size.Y / 2f);
+            positionInPixels = _silhouette._body.Position;
+            rectBorderOfObjCoords = new Vector2();
+            rectBorderOfObjCoords.X = positionInPixels.X - (_silhouette._sprite.Size.X * (1f / 24f) / 2f);
+            rectBorderOfObjCoords.Y = positionInPixels.Y + (_silhouette._sprite.Size.Y * (1f / 24f) / 2f);
+
+
+            testDot = new Sprite(ScreenManager.Assets.CircleTexture(2f, MaterialType.Blank, Color.Black, 1f, 24f));
+        }
+        public void TESTDraw()
+        {
+            ScreenManager.SpriteBatch.Draw(
+                testDot.Texture,
+                positionInPixels,
+                null,
+                Color.White,
+                0f,
+                testDot.Origin,
+                testDot.Size * testDot.TexelSize * (1f / 24f),
+                SpriteEffects.FlipVertically,
+                0f);
+
+            ScreenManager.SpriteBatch.Draw(
+                testDot.Texture,
+                rectBorderOfObjCoords,
+                null,
+                Color.White,
+                0f,
+                testDot.Origin,
+                testDot.Size * testDot.TexelSize * (1f / 24f),
+                SpriteEffects.FlipVertically,
+                0f);
+        }
+        #endregion
     }
 
     public enum IsMouseLeftButtonPressed
@@ -286,3 +379,18 @@ namespace UberBuilder.GameSystem
     }
 }
 
+
+
+//47 83 105 255
+
+//// Note that this stores the pixel's row in the first index, and the pixel's column in the second,
+//// with this setup.
+//Color[,] rawDataAsGrid = new Color[height, width];
+//for (int row = 0; row<height; row++)
+//{
+//    for (int column = 0; column<width; column++)
+//    {
+//        // Assumes row major ordering of the array.
+//        rawDataAsGrid[row, column] = rawData[row * width + column];
+//    }
+//}

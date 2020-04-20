@@ -4,6 +4,7 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/2.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/arrow.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/buttons.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/cursor.png</File>
@@ -30,29 +31,6 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/woodBlock1.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

@@ -86,21 +86,23 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         Vector2 centroid;
 
         string _texturePath;
-        public BreakableObj1(World world, ScreenManager screenManager, Vector2 position, Camera2D camera, string texturePath, TriangulationAlgorithm triangulationAlgorithm)
+        Vector2 _textureScale;
+        public BreakableObj1(World world, ScreenManager screenManager, Vector2 position, Camera2D camera, string texturePath, TriangulationAlgorithm triangulationAlgorithm, Vector2 scale)
         {
             _world = world;
             _screenManager = screenManager;
             //_batch = _screenManager.SpriteBatch;
             _camera = camera;
             _texturePath = texturePath;
+            _textureScale = scale;
 
-            var vp = screenManager.GraphicsDevice.Viewport;
-            float height = 30f; // 30 meters height
-            float width = height * vp.AspectRatio;
-            width -= 1.5f; // 1.5 meters border
-            height -= 1.5f;
-            float halfWidth = width / 2f;
-            float halfHeight = height / 2f;
+            //var vp = screenManager.GraphicsDevice.Viewport;
+            //float height = 30f; // 30 meters height
+            //float width = height * vp.AspectRatio;
+            //width -= 1.5f; // 1.5 meters border
+            //height -= 1.5f;
+            //float halfWidth = width / 2f;
+            //float halfHeight = height / 2f;
 
             //1)Триангуляция текстуры в полигоны
             //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
@@ -114,7 +116,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             for (int i = 0; i < list.Count; i++)
                 list[i].Scale(new Vector2(1f, -1f)); // flip Vert
 
-            List<Vertices> triangulated;
+            List<Vertices> triangulated = new List<Vertices>();
             for (int i = 0; i < list.Count; i++)
             {
                 polygon = list[i];
@@ -124,17 +126,16 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
                 triangulated = Triangulate.ConvexPartition(polygon, triangulationAlgorithm);
 
-                Vector2 vertScale = new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height);
+                Vector2 vertScale = (new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height)) * scale/*0.5f*/;
                 foreach (Vertices vertices in triangulated)
                     vertices.Scale(ref vertScale);
-
-                _breakableBody = new SegmentableBody(_world, triangulated, 1);
-                _breakableBody.MainBody.Position = /*new Vector2(0, 0)*/position;
-                _breakableBody.Strength = 1200;
             }
+            _breakableBody = new SegmentableBody(_world, triangulated, 1);
+            _breakableBody.MainBody.Position = position;
+            _breakableBody.Strength = 1200;
 
             //========================================================================================================
-            Random random = new Random();
+            //Random random = new Random();
             //2)Массивы для индексного рассчета вершин под графен
             //2.1)лист вершин для каждого полигона
             List<Vertices> temp = _breakableBody.Parts
@@ -149,19 +150,30 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             //2.5)сортированый массив вершин и их цветов полигонов для отрисовки
             TESTListOfVertices = new List<VertexPositionTexture[]>();
 
+            //Поиск размера исходного объекта
+            float mainBodyWidth = 0f;
+            float mainBodyHeight = 0f;
             //Поиск смещения объекта в отрицательную часть координатной плоскости
             float leftOffsetFromZero = temp.First().First().X;//для всего объекта, а не отдельных полигонов
             float downOffsetFromZero = temp.First().First().Y;
+            float rightOffsetFromZero = temp.First().First().X;//для всего объекта, а не отдельных полигонов
+            float upOffsetFromZero = temp.First().First().Y;
             for (int i = 0; i < temp.Count; i++)
             {
                 for (int j = 0; j < temp[i].Count; j++)
                 {
                     if (temp[i][j].X <= leftOffsetFromZero) leftOffsetFromZero = temp[i][j].X;
                     if (temp[i][j].Y <= downOffsetFromZero) downOffsetFromZero = temp[i][j].Y;
+                    if (temp[i][j].X >= rightOffsetFromZero) rightOffsetFromZero = temp[i][j].X;
+                    if (temp[i][j].Y >= upOffsetFromZero) upOffsetFromZero = temp[i][j].Y;
                 }
             }
+            mainBodyWidth = Math.Abs(leftOffsetFromZero - rightOffsetFromZero);
+            mainBodyHeight = Math.Abs(downOffsetFromZero - upOffsetFromZero);
             leftOffsetFromZero = Math.Abs(leftOffsetFromZero);
             downOffsetFromZero = Math.Abs(downOffsetFromZero);
+            //rightOffsetFromZero = Math.Abs(rightOffsetFromZero);
+            //upOffsetFromZero = Math.Abs(upOffsetFromZero);
 
             for (int i = 0; i < temp.Count; i++)
             {
@@ -178,10 +190,11 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
                 var temp3 = VertexClockwiseSort(tempUnsorted, centr);
 
+                
                 for (int j = 0; j < temp3.Length; j++)
                 {
-                    temp3[j].TextureCoordinate.X = (temp3[j].TextureCoordinate.X + leftOffsetFromZero) / ((width + leftOffsetFromZero));
-                    temp3[j].TextureCoordinate.Y = (temp3[j].TextureCoordinate.Y + downOffsetFromZero) / ((height + downOffsetFromZero));
+                    temp3[j].TextureCoordinate.X = ((temp3[j].TextureCoordinate.X + leftOffsetFromZero) / ((mainBodyWidth/*width*/)));
+                    temp3[j].TextureCoordinate.Y = 1f - ((temp3[j].TextureCoordinate.Y + downOffsetFromZero) / ((mainBodyHeight/*height*/)));
                 }
 
                 TESTListOfVertices.Add(temp3);
@@ -207,7 +220,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             }
 
             effect = new BasicEffect(_screenManager.GraphicsDevice);
-            texture = _screenManager.Content.Load<Texture2D>("wood2");
+            texture = _screenManager.Content.Load<Texture2D>(/*"wood2"*/"2");
             effect.TextureEnabled = true;
             effect.Texture = texture;
 

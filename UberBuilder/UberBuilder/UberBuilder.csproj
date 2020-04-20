@@ -139,6 +139,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\2.png" />
     <Content Include="Content\wood2.png" />
     <Content Include="Content\Common\arrow.png" />
     <Content Include="Content\Common\buttons.png" />

@@ -85,7 +85,7 @@ namespace UberBuilder.GameSystem
             float halfWidth = _halfWidth = _width / 2f;
             float halfHeight = _halfHeight = _height / 2f;
 
-            //DebugView.AppendFlags(DebugViewFlags.Shape);
+            DebugView.AppendFlags(DebugViewFlags.Shape);
 
             World.Gravity = /*Vector2.Zero*/new Vector2(0, -9.82f);
 
@@ -96,8 +96,9 @@ namespace UberBuilder.GameSystem
                 ScreenManager,
                 new Vector2(0f, 0f),
                 Camera,
-                /*"woodBlock1"*/"Samples/object",
-                TriangulationAlgorithm.Seidel);
+                /*"woodBlock1"*//*"Samples/object"*/"2",
+                TriangulationAlgorithm.Seidel, 
+                new Vector2(1f, 0.5f));
 
             _uberBuilder = new UBuilder(
                 World,
@@ -163,7 +164,7 @@ namespace UberBuilder.GameSystem
 
         public override void UnloadContent()
         {
-            //DebugView.RemoveFlags(DebugViewFlags.Shape);
+            DebugView.RemoveFlags(DebugViewFlags.Shape);
 
             base.UnloadContent();
         }
@@ -223,6 +224,14 @@ namespace UberBuilder.GameSystem
                         bodyToThrow.Awake = true;
 
                         isMouseLeftButtonPressed = IsMouseLeftButtonPressed.Yes;
+                    }
+                    else//test
+                    {
+                        bodyToThrow.BodyType = BodyType.Dynamic;
+                        _fixedMouseJoint = new FixedMouseJoint(bodyToThrow, position);
+                        _fixedMouseJoint.MaxForce = 1000.0f * bodyToThrow.Mass;
+                        World.Add(_fixedMouseJoint);
+                        bodyToThrow.Awake = true;
                     }
                 }
                 else savedFixture = null;
@@ -288,6 +297,7 @@ namespace UberBuilder.GameSystem
                     Vector2 rectBorderOfObjCoords = new Vector2();
                     rectBorderOfObjCoords.X = positionInPixels.X - (w1 / 2f);
                     rectBorderOfObjCoords.Y = positionInPixels.Y + (h1 / 2f);
+                    //Rectangle boundRectangle = ;
                     Color[] colors = new Color[w1 * h1];
                     texture.GetData<Color>(
                         0,

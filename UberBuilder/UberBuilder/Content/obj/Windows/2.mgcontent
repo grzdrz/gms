@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/arrow.png</SourceFile>
-  <SourceTime>2020-04-15T07:16:15.1815415+07:00</SourceTime>
-  <DestFile>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Common/arrow.xnb</DestFile>
-  <DestTime>2020-04-20T17:35:49.9223958+07:00</DestTime>
+  <SourceFile>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/2.png</SourceFile>
+  <SourceTime>2020-04-20T17:41:11.3147312+07:00</SourceTime>
+  <DestFile>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/2.xnb</DestFile>
+  <DestTime>2020-04-20T17:41:28.7792023+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

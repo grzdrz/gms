@@ -96,19 +96,23 @@ namespace UberBuilder.GameSystem
                 ScreenManager,
                 new Vector2(0f, 0f),
                 Camera,
-                /*"woodBlock1"*//*"Samples/object"*/"2",
-                TriangulationAlgorithm.Seidel, 
-                new Vector2(1f, 0.5f));
+                "wood-plank2"/*"Samples/object"*/,
+                TriangulationAlgorithm.Bayazit, 
+                new Vector2(0.3f, 0.05f),
+                50f);
+            _woodBlock.SetTrajectoriesObjects();
 
             _uberBuilder = new UBuilder(
                 World,
                 ScreenManager,
                 new Vector2(-halfWidth + 10f, -halfHeight + 10f),
                 Camera);
+            _uberBuilder._body.BodyType = BodyType.Dynamic;
 
             _throwTrajectory = new ThrowTrajectory(
                 World,
                 ScreenManager);
+            _throwTrajectory.SetBodyToThrow(_woodBlock);
 
 
             _silhouette = new BuildingSilhouette(
@@ -139,8 +143,6 @@ namespace UberBuilder.GameSystem
                     Camera.MoveCamera(new Vector2(0.05f, 0f));
                 else IsCameCanMove = false;
             }
-            
-            //if(IsGameEnd) ((Game1)ScreenManager.Game).background.
         }
 
         public override void Draw(GameTime gameTime)
@@ -149,7 +151,7 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            _woodBlock.Draw(ScreenManager.SpriteBatch);
+            _woodBlock.Draw();
             _uberBuilder.Draw();
             _throwTrajectory.Draw(isMouseLeftButtonPressed);
             _silhouette.Draw(ScreenManager.SpriteBatch);
@@ -207,7 +209,7 @@ namespace UberBuilder.GameSystem
         protected override void HandleCursor(InputHelper input)
         {
             #region "Захват тела и создание объектов-траектории для него"
-            Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);
+            Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);//пиксели -> местные координаты???
 
             if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
             {
@@ -215,23 +217,15 @@ namespace UberBuilder.GameSystem
                 if (savedFixture != null)
                 {
                     bodyToThrow = savedFixture.Body;
-                    if (bodyToThrow == _uberBuilder._body)
+                    if (bodyToThrow == _woodBlock.body)
                     {
-                        bodyToThrow.BodyType = BodyType.Dynamic;
+                        //bodyToThrow.BodyType = BodyType.Dynamic;
                         _fixedMouseJoint = new FixedMouseJoint(bodyToThrow, position);
                         _fixedMouseJoint.MaxForce = 1000.0f * bodyToThrow.Mass;
                         World.Add(_fixedMouseJoint);
                         bodyToThrow.Awake = true;
 
                         isMouseLeftButtonPressed = IsMouseLeftButtonPressed.Yes;
-                    }
-                    else//test
-                    {
-                        bodyToThrow.BodyType = BodyType.Dynamic;
-                        _fixedMouseJoint = new FixedMouseJoint(bodyToThrow, position);
-                        _fixedMouseJoint.MaxForce = 1000.0f * bodyToThrow.Mass;
-                        World.Add(_fixedMouseJoint);
-                        bodyToThrow.Awake = true;
                     }
                 }
                 else savedFixture = null;
@@ -241,9 +235,8 @@ namespace UberBuilder.GameSystem
             {
                 World.Remove(_fixedMouseJoint);
                 _fixedMouseJoint = null;
-                if (bodyToThrow == _uberBuilder._body)
+                if (bodyToThrow == _woodBlock.body)
                 {
-                    bodyToThrow.BodyType = BodyType.Dynamic;
                     throwForce = (_uberBuilder._originPosition - bodyToThrow.Position) * 500f;
                     bodyToThrow.ApplyForce(throwForce);
 

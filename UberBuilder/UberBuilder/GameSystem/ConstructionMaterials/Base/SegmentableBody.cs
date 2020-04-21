@@ -145,7 +145,8 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
             //Unsubsribe from the PostSolve delegate
             World.ContactManager.PostSolve -= PostSolve;
-
+            var oneMass = MainBody.Mass / (float)Parts.Count;
+            var friction = oneMass * 2f;
             for (int i = 0; i < Parts.Count; i++)
             {
                 Fixture oldFixture = Parts[i];
@@ -157,6 +158,8 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
                 Body body = World.CreateBody(MainBody.Position, MainBody.Rotation, BodyType.Dynamic);
                 body.Tag = MainBody.Tag;
+                body.Mass = oneMass;
+                body.SetFriction(friction);
                 _bodiesAfterSegmented.Add(body);
 
                 Fixture newFixture = body.CreateFixture(shape);

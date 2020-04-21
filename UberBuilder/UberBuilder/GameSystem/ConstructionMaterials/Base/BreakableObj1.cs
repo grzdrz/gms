@@ -16,10 +16,11 @@ using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Joints;
 using tainicom.Aether.Physics2D.Samples.DrawingSystem;
 using tainicom.Aether.Physics2D.Samples.ScreenSystem;
+using UberBuilder.GameSystem.ConstructionMaterials.Base;
 
 namespace UberBuilder.GameSystem.ConstructionMaterials
 {
-    public class BreakableObj1
+    public class BreakableObj1 : ThrowableBody
     {
         public World _world;
         public ScreenManager _screenManager;
@@ -42,69 +43,39 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         IndexBuffer indexBuffer7;
         IndexBuffer indexBuffer8;
 
-        short[] triangleCubeIndices3_1 =
-{
-                0,1,2
-         };
-        short[] triangleCubeIndices4_1 =
-{
-                0,1,2,
-                2,3,0
-         };
-        short[] triangleCubeIndices5_1 =
-{
-                0,1,2,
-                2,3,0,
-                3,4,0
-         };
-        short[] triangleCubeIndices6_1 =
-        {
-                0,1,2,
-                2,3,0,
-                3,4,0,
-                4,5,0
-         };
-        short[] triangleCubeIndices7_1 =
-{
-                0,1,2,
-                2,3,0,
-                3,4,0,
-                4,5,0,
-                5,6,0
-         };
-        short[] triangleCubeIndices8_1 =
-{
-                0,1,2,
-                2,3,0,
-                3,4,0,
-                4,5,0,
-                5,6,0,
-                6,7,0
-         };
+        public Vertices polygon { get; set; }
+        public Vector2 centroid;
 
-        Vertices polygon { get; set; }
-        Vector2 centroid;
+        public string _texturePath;
+        public Vector2 _textureScale;
+        public TriangulationAlgorithm _triangulationAlgorithm;
 
-        string _texturePath;
-        Vector2 _textureScale;
-        public BreakableObj1(World world, ScreenManager screenManager, Vector2 position, Camera2D camera, string texturePath, TriangulationAlgorithm triangulationAlgorithm, Vector2 scale)
+        public Body body { get { return _breakableBody.MainBody; } }
+        //public bool IsCanDraw { get; set; }
+
+        //для отрисовки траектории
+        private Dictionary<int, ThrowableBody> _throwableBodies = new Dictionary<int, ThrowableBody>();
+        public Dictionary<int, ThrowableBody> throwableBodies { get { return _throwableBodies; } }
+
+        public BreakableObj1(
+            World world,
+            ScreenManager screenManager, 
+            Vector2 position,
+            Camera2D camera, 
+            string texturePath, 
+            TriangulationAlgorithm triangulationAlgorithm,
+            Vector2 scale,
+            float strength)
         {
             _world = world;
             _screenManager = screenManager;
-            //_batch = _screenManager.SpriteBatch;
             _camera = camera;
             _texturePath = texturePath;
             _textureScale = scale;
+            _triangulationAlgorithm = triangulationAlgorithm;
 
-            //var vp = screenManager.GraphicsDevice.Viewport;
-            //float height = 30f; // 30 meters height
-            //float width = height * vp.AspectRatio;
-            //width -= 1.5f; // 1.5 meters border
-            //height -= 1.5f;
-            //float halfWidth = width / 2f;
-            //float halfHeight = height / 2f;
 
-            //1)Триангуляция текстуры в полигоны
+            #region "Триангуляция текстуры в полигоны"
             //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
             Texture2D alphabet = _screenManager.Content.Load<Texture2D>(_texturePath);
 
@@ -132,11 +103,13 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             }
             _breakableBody = new SegmentableBody(_world, triangulated, 1);
             _breakableBody.MainBody.Position = position;
-            _breakableBody.Strength = 1200;
+            _breakableBody.MainBody.Mass = 5f;
+            _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 2f);
+            _breakableBody.Strength = /*50*/strength;
+            #endregion
 
-            //========================================================================================================
-            //Random random = new Random();
-            //2)Массивы для индексного рассчета вершин под графен
+
+            #region "Массивы для индексного рассчета вершин под графен"
             //2.1)лист вершин для каждого полигона
             List<Vertices> temp = _breakableBody.Parts
                 .Select(a => ((PolygonShape)(a.Shape)).Vertices)
@@ -218,28 +191,32 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 vb.SetData(e);
                 vertexBuffers.Add(vb);
             }
+            #endregion
+
 
             effect = new BasicEffect(_screenManager.GraphicsDevice);
-            texture = _screenManager.Content.Load<Texture2D>(/*"wood2"*/"2");
+            texture = _screenManager.Content.Load<Texture2D>(/*"wood2"*/"wood-plank2");
             effect.TextureEnabled = true;
             effect.Texture = texture;
 
             //буферы индексов для полигонов с разным числом вершин
             indexBuffer3 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer3.SetData<short>(triangleCubeIndices3_1);
+            indexBuffer3.SetData<short>(TriangleCubeIndices.triangleCubeIndices3_1);
             indexBuffer4 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer4.SetData<short>(triangleCubeIndices4_1);
+            indexBuffer4.SetData<short>(TriangleCubeIndices.triangleCubeIndices4_1);
             indexBuffer5 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer5.SetData<short>(triangleCubeIndices5_1);
+            indexBuffer5.SetData<short>(TriangleCubeIndices.triangleCubeIndices5_1);
             indexBuffer6 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer6.SetData<short>(triangleCubeIndices6_1);
+            indexBuffer6.SetData<short>(TriangleCubeIndices.triangleCubeIndices6_1);
             indexBuffer7 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer7.SetData<short>(triangleCubeIndices7_1);
+            indexBuffer7.SetData<short>(TriangleCubeIndices.triangleCubeIndices7_1);
             indexBuffer8 = new IndexBuffer(_screenManager.GraphicsDevice, typeof(short), 36, BufferUsage.WriteOnly);
-            indexBuffer8.SetData<short>(triangleCubeIndices8_1);
+            indexBuffer8.SetData<short>(TriangleCubeIndices.triangleCubeIndices8_1);
 
             //точка для отрисовки центрода(ТЕСТ)
             TESTCentroid = new Sprite(_screenManager.Assets.CircleTexture(0.1f, MaterialType.Squares, Color.Black, 1f, 24f));
+
+            //IsCanDraw = true;
         }
 
         public virtual void Update(FixedMouseJoint fixedMouseJoint)
@@ -279,102 +256,105 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             }
         }
 
-        public void Draw(SpriteBatch batch)
+        public void Draw()
         {
-            for (int i = 0; i < TESTListOfVertices.Count; i++)
-            {
-                var p = _camera.Projection;
-                var v = _camera.View;
-                //поворот и координаты(именно в таком порядке) полигона
-                Matrix w;
-                if (_breakableBody.State == SegmentableBody.BreakableBodyState.Unbroken)
+            //if (IsCanDraw)
+            //{
+                for (int i = 0; i < TESTListOfVertices.Count; i++)
                 {
-                    w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
-                    w *= Matrix.CreateWorld(
-                        new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
-                        new Vector3(0, 0, -2),
-                        Vector3.Up);
-                }
-                else
-                {
-                    w = Matrix.CreateRotationZ(_breakableBody._bodiesAfterSegmented[i].Rotation);
-                    w *= Matrix.CreateWorld(
-                        new Vector3(
-                            _breakableBody._bodiesAfterSegmented[i].Position.X,
-                            _breakableBody._bodiesAfterSegmented[i].Position.Y,
-                            0f),
-                        new Vector3(0, 0, -2),
-                        Vector3.Up);
-                }
+                    var p = _camera.Projection;
+                    var v = _camera.View;
+                    //поворот и координаты(именно в таком порядке) полигона
+                    Matrix w;
+                    if (_breakableBody.State == SegmentableBody.BreakableBodyState.Unbroken)
+                    {
+                        w = Matrix.CreateRotationZ(_breakableBody.MainBody.Rotation);
+                        w *= Matrix.CreateWorld(
+                            new Vector3(_breakableBody.MainBody.Position.X, _breakableBody.MainBody.Position.Y, 0f),
+                            new Vector3(0, 0, -2),
+                            Vector3.Up);
+                    }
+                    else
+                    {
+                        w = Matrix.CreateRotationZ(_breakableBody._bodiesAfterSegmented[i].Rotation);
+                        w *= Matrix.CreateWorld(
+                            new Vector3(
+                                _breakableBody._bodiesAfterSegmented[i].Position.X,
+                                _breakableBody._bodiesAfterSegmented[i].Position.Y,
+                                0f),
+                            new Vector3(0, 0, -2),
+                            Vector3.Up);
+                    }
 
-                // установка буфера вершин
-                _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffers[i]);
-                //установка матриц эффекта
-                effect.World = w;
-                effect.View = v;
-                effect.Projection = p;
+                    // установка буфера вершин
+                    _screenManager.GraphicsDevice.SetVertexBuffer(vertexBuffers[i]);
+                    //установка матриц эффекта
+                    effect.World = w;
+                    effect.View = v;
+                    effect.Projection = p;
 
-                int _debugger_;
-                short[] indexes = triangleCubeIndices3_1;
-                if (TESTListOfVertices[i].Length == 3)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer3;
-                    indexes = triangleCubeIndices3_1;
-                }
-                else if (TESTListOfVertices[i].Length == 4)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer4;
-                    indexes = triangleCubeIndices4_1;
-                }
-                else if (TESTListOfVertices[i].Length == 5)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer5;
-                    indexes = triangleCubeIndices5_1;
-                }
-                else if (TESTListOfVertices[i].Length == 6)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer6;
-                    indexes = triangleCubeIndices6_1;
-                }
-                else if (TESTListOfVertices[i].Length == 7)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer7;
-                    indexes = triangleCubeIndices7_1;
-                }
-                else if (TESTListOfVertices[i].Length == 8)
-                {
-                    _screenManager.GraphicsDevice.Indices = indexBuffer8;
-                    indexes = triangleCubeIndices8_1;
-                }
-                else
-                    _debugger_ = 0;
+                    //int _debugger_;
+                    short[] indexes = TriangleCubeIndices.triangleCubeIndices3_1;
+                    if (TESTListOfVertices[i].Length == 3)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer3;
+                        indexes = TriangleCubeIndices.triangleCubeIndices3_1;
+                    }
+                    else if (TESTListOfVertices[i].Length == 4)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer4;
+                        indexes = TriangleCubeIndices.triangleCubeIndices4_1;
+                    }
+                    else if (TESTListOfVertices[i].Length == 5)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer5;
+                        indexes = TriangleCubeIndices.triangleCubeIndices5_1;
+                    }
+                    else if (TESTListOfVertices[i].Length == 6)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer6;
+                        indexes = TriangleCubeIndices.triangleCubeIndices6_1;
+                    }
+                    else if (TESTListOfVertices[i].Length == 7)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer7;
+                        indexes = TriangleCubeIndices.triangleCubeIndices7_1;
+                    }
+                    else if (TESTListOfVertices[i].Length == 8)
+                    {
+                        _screenManager.GraphicsDevice.Indices = indexBuffer8;
+                        indexes = TriangleCubeIndices.triangleCubeIndices8_1;
+                    }
+                    //else
+                    //    _debugger_ = 0;
 
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
 
-                    _screenManager.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
-                        PrimitiveType.TriangleList,
-                        TESTListOfVertices[i],
-                        0,
-                        TESTListOfVertices[i].Length,
-                        indexes,
-                        0,
-                        TESTListOfVertices[i].Length - 2);
+                        _screenManager.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
+                            PrimitiveType.TriangleList,
+                            TESTListOfVertices[i],
+                            0,
+                            TESTListOfVertices[i].Length,
+                            indexes,
+                            0,
+                            TESTListOfVertices[i].Length - 2);
+                    }
+
+
+                    //_batch.Draw(//тестовая точка
+                    //    TESTCentroid.Texture,
+                    //    centroids[i],
+                    //    null,
+                    //    Color.White,
+                    //    0f,
+                    //    TESTCentroid.Origin,
+                    //    TESTCentroid.Size * TESTCentroid.TexelSize * (1f / 24f),
+                    //    SpriteEffects.FlipVertically,
+                    //    0f);
                 }
-
-
-                //_batch.Draw(//тестовая точка
-                //    TESTCentroid.Texture,
-                //    centroids[i],
-                //    null,
-                //    Color.White,
-                //    0f,
-                //    TESTCentroid.Origin,
-                //    TESTCentroid.Size * TESTCentroid.TexelSize * (1f / 24f),
-                //    SpriteEffects.FlipVertically,
-                //    0f);
-            }
+            //}
         }
 
         public VertexPositionTexture[] VertexClockwiseSort(VertexPositionTexture[] vpc, Vector2 centroid)
@@ -384,6 +364,25 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             return test.Select(b => b.origin).ToArray();
         }
 
+        public void SetTrajectoriesObjects()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                _throwableBodies[i] = new BreakableObj1(
+                    _world,
+                    _screenManager,
+                    this.body.Position,
+                    _camera,
+                    _texturePath,
+                    _triangulationAlgorithm,
+                    _textureScale, 
+                    9999);
+                Category c = (Category)((int)Math.Pow(2, (i + 2)));
+                _throwableBodies[i].body.SetCollisionCategories(c);
+                _throwableBodies[i].body.SetCollidesWith(c);
+                _world.Remove(_throwableBodies[i].body);
+            }
+        }
     }
 
     public class TwoVectorsContainer1//контейнер для сортировки вершин относительно центройда их полигона
@@ -417,5 +416,48 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
             return angle2.CompareTo(angle1);
         }
+    }
+
+    public static class TriangleCubeIndices
+    {
+        public static short[] triangleCubeIndices3_1 =
+{
+                0,1,2
+         };
+        public static short[] triangleCubeIndices4_1 =
+{
+                0,1,2,
+                2,3,0
+         };
+        public static short[] triangleCubeIndices5_1 =
+{
+                0,1,2,
+                2,3,0,
+                3,4,0
+         };
+        public static short[] triangleCubeIndices6_1 =
+        {
+                0,1,2,
+                2,3,0,
+                3,4,0,
+                4,5,0
+         };
+        public static short[] triangleCubeIndices7_1 =
+{
+                0,1,2,
+                2,3,0,
+                3,4,0,
+                4,5,0,
+                5,6,0
+         };
+        public static short[] triangleCubeIndices8_1 =
+{
+                0,1,2,
+                2,3,0,
+                3,4,0,
+                4,5,0,
+                5,6,0,
+                6,7,0
+         };
     }
 }

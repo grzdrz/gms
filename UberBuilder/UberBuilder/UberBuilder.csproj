@@ -135,13 +135,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\2.png" />
-    <Content Include="Content\building1.png" />
-    <Content Include="Content\building3.png" />
-    <Content Include="Content\wood-halfBox1.png" />
-    <Content Include="Content\wood-halfCircle1.png" />
-    <Content Include="Content\wood-plank1.png" />
-    <Content Include="Content\wood-plank3.png" />
+    <Content Include="Content\gameObjs\building1.png" />
+    <Content Include="Content\gameObjs\building3.png" />
+    <Content Include="Content\gameObjs\bootilka1.png" />
+    <Content Include="Content\gameObjs\vilka.png" />
+    <Content Include="Content\gameObjs\yabloko.png" />
+    <Content Include="Content\gameObjs\wood-plank3.png" />
     <Content Include="Content\wood-plank4.png" />
     <Content Include="Content\wood-plank5.png" />
     <Content Include="Content\wood2.png" />
@@ -188,8 +187,6 @@
     <Content Include="Content\Samples\link.png" />
     <Content Include="Content\Samples\object.png" />
     <Content Include="Content\Samples\wheel.png" />
-    <Content Include="Content\woodBlock1.png" />
-    <Content Include="Content\woodBlock2.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

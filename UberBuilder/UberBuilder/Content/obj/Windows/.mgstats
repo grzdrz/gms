@@ -1,9 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/building1.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/building1.xnb","TextureProcessor","Texture2DContent",19937,891313,0,2567791
-"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/building3.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/building3.xnb","TextureProcessor","Texture2DContent",53510,891313,0,0499662
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/cursor.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Common/cursor.xnb","TextureProcessor","Texture2DContent",4397,4181,0
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/slider.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Common/slider.xnb","TextureProcessor","Texture2DContent",637,1685,0
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/waves.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Materials/waves.xnb","TextureProcessor","Texture2DContent",1172,16469,0
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/link.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Samples/link.xnb","TextureProcessor","Texture2DContent",260,597,0
-"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-halfBox1.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/wood-halfBox1.xnb","TextureProcessor","Texture2DContent",397011,4698117,0,2668338
-"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-halfCircle1.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/wood-halfCircle1.xnb","TextureProcessor","Texture2DContent",221959,2380125,0,1489094

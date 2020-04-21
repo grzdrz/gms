@@ -266,10 +266,10 @@ namespace UberBuilder.GameSystem
                     ScreenManager,
                     new Vector2(-10f, 0f),
                     Camera,
-                    "wood-plank3",
+                   /* "wood-plank3"*/"yabloko",
                     TriangulationAlgorithm.Bayazit,
-                    new Vector2(0.6f, 0.04f/*0.4f, 0.4f*/),
-                    50f));
+                    new Vector2(/*0.6f, 0.04f*/50f, 50f),
+                    500f));
                 //_blocks.Last().SetTrajectoriesObjects();
                 _blocks.Last()._blockState = BlockState.Created;
             }

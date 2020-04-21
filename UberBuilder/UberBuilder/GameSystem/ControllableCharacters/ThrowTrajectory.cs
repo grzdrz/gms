@@ -19,7 +19,6 @@ namespace UberBuilder.GameSystem.ControllableCharacters
         public World _world;
         public ScreenManager _screenManager;
 
-        //public Dictionary<int, Body> _throwTrajectory;
         public Sprite dots;
         public Dictionary<int, ThrowableBody> _throwTrajectory;
         public ThrowableBody _bodyToThrow;

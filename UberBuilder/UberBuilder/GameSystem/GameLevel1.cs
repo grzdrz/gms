@@ -34,7 +34,9 @@ namespace UberBuilder.GameSystem
         public float _halfHeight;
 
         public Border _border;
-        public WoodBlock _woodBlock;
+        //public WoodBlock _woodBlock;
+        public List<BreakableObj1> _blocks;
+        public BreakableObj1 _targetBlock;
         public UBuilder _uberBuilder;
 
         public ThrowTrajectory _throwTrajectory;
@@ -91,16 +93,18 @@ namespace UberBuilder.GameSystem
 
             _border = new Border(World, ScreenManager, Camera);
 
-            _woodBlock = new WoodBlock(
-                World,
-                ScreenManager,
-                new Vector2(0f, 0f),
-                Camera,
-                "wood-plank2"/*"Samples/object"*/,
-                TriangulationAlgorithm.Bayazit, 
-                new Vector2(0.3f, 0.05f),
-                50f);
-            _woodBlock.SetTrajectoriesObjects();
+            //_woodBlock = new WoodBlock(
+            //    World,
+            //    ScreenManager,
+            //    new Vector2(0f, 0f),
+            //    Camera,
+            //    "wood-plank2"/*"Samples/object"*/,
+            //    TriangulationAlgorithm.Bayazit, 
+            //    new Vector2(0.3f, 0.05f),
+            //    50f);
+            //_woodBlock.SetTrajectoriesObjects();
+
+            _blocks = new List<BreakableObj1>();
 
             _uberBuilder = new UBuilder(
                 World,
@@ -112,7 +116,7 @@ namespace UberBuilder.GameSystem
             _throwTrajectory = new ThrowTrajectory(
                 World,
                 ScreenManager);
-            _throwTrajectory.SetBodyToThrow(_woodBlock);
+            //_throwTrajectory.SetBodyToThrow(_woodBlock);
 
 
             _silhouette = new BuildingSilhouette(
@@ -131,7 +135,11 @@ namespace UberBuilder.GameSystem
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            _woodBlock.Update(this._fixedMouseJoint);
+            //_woodBlock.Update(this._fixedMouseJoint);
+            foreach (var b in _blocks)
+            {
+                b.Update(this._fixedMouseJoint);
+            }
             _uberBuilder.Update();
             _throwTrajectory.Update(this);
             _silhouette.Update();
@@ -151,7 +159,11 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            _woodBlock.Draw();
+            //_woodBlock.Draw();
+            foreach (var b in _blocks)
+            {
+                b.Draw();
+            }
             _uberBuilder.Draw();
             _throwTrajectory.Draw(isMouseLeftButtonPressed);
             _silhouette.Draw(ScreenManager.SpriteBatch);
@@ -205,7 +217,7 @@ namespace UberBuilder.GameSystem
         public Body bodyToThrow;
         public Vector2 throwForce = Vector2.Zero;
         public IsMouseLeftButtonPressed isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
-
+        public BreakableObj1 tBlock = null;
         protected override void HandleCursor(InputHelper input)
         {
             #region "Захват тела и создание объектов-траектории для него"
@@ -213,12 +225,14 @@ namespace UberBuilder.GameSystem
 
             if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
             {
+                tBlock = null;
                 Fixture savedFixture = World.TestPoint(position);
                 if (savedFixture != null)
                 {
                     bodyToThrow = savedFixture.Body;
-                    if (bodyToThrow == _woodBlock.body)
+                    if ((tBlock = _blocks.FirstOrDefault(a => a.body == bodyToThrow)) != null)
                     {
+                        _throwTrajectory.SetBodyToThrow(tBlock);
                         //bodyToThrow.BodyType = BodyType.Dynamic;
                         _fixedMouseJoint = new FixedMouseJoint(bodyToThrow, position);
                         _fixedMouseJoint.MaxForce = 1000.0f * bodyToThrow.Mass;
@@ -235,11 +249,16 @@ namespace UberBuilder.GameSystem
             {
                 World.Remove(_fixedMouseJoint);
                 _fixedMouseJoint = null;
-                if (bodyToThrow == _woodBlock.body)
+                if (bodyToThrow == tBlock.body)
                 {
                     throwForce = (_uberBuilder._originPosition - bodyToThrow.Position) * 500f;
                     bodyToThrow.ApplyForce(throwForce);
 
+                    foreach (var e in tBlock.throwableBodies)
+                    {
+                        if(World.BodyList.Contains(e.Value.body)) 
+                            World.Remove(e.Value.body);
+                    }
                     isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
                 }
             }
@@ -249,12 +268,26 @@ namespace UberBuilder.GameSystem
             #endregion
 
             #region "Смещение камеры к силуэту, его снимок и обработка"
+            //if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
+            //{
+            //    IsGameEnd = true;
+            //    HasCursor = false;   
+            //}
+            #endregion
+
             if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
             {
-                IsGameEnd = true;
-                HasCursor = false;   
+                _blocks.Add(new WoodBlock(
+                    World,
+                    ScreenManager,
+                    new Vector2(-10f, 0f),
+                    Camera,
+                    "wood-plank2"/*"Samples/object"*/,
+                    TriangulationAlgorithm.Bayazit,
+                    new Vector2(0.3f, 0.05f),
+                    50f));
+                _blocks.Last().SetTrajectoriesObjects();
             }
-            #endregion
         }
 
         public bool IsGameEnd = false;

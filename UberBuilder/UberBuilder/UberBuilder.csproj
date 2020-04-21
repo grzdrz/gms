@@ -75,13 +75,8 @@
     <Compile Include="GameSystem\ConstructionMaterials\Base\BreakableObj.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Base\BreakableObj1.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Base\ThrowableBody.cs" />
-    <Compile Include="GameSystem\ConstructionMaterials\Brick.cs" />
-    <Compile Include="GameSystem\ConstructionMaterials\Cement.cs" />
-    <Compile Include="GameSystem\ConstructionMaterials\Glass.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\Base\SegmentableBody.cs" />
     <Compile Include="GameSystem\ConstructionMaterials\WoodBlock.cs" />
-    <Compile Include="GameSystem\ControllableCharacters\ThrowTrajectory.cs" />
-    <Compile Include="GameSystem\ControllableCharacters\UberBuilder.cs" />
     <Compile Include="GameSystem\GameLevel1.cs" />
     <Compile Include="GameSystem\StaticGameObjects\BuildingSilhouette.cs" />
     <Compile Include="GameSystem\StaticGameObjects\GameBorders.cs" />
@@ -141,7 +136,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\2.png" />
+    <Content Include="Content\building1.png" />
+    <Content Include="Content\building3.png" />
+    <Content Include="Content\wood-halfBox1.png" />
+    <Content Include="Content\wood-halfCircle1.png" />
     <Content Include="Content\wood-plank1.png" />
+    <Content Include="Content\wood-plank3.png" />
+    <Content Include="Content\wood-plank4.png" />
+    <Content Include="Content\wood-plank5.png" />
     <Content Include="Content\wood2.png" />
     <Content Include="Content\Common\arrow.png" />
     <Content Include="Content\Common\buttons.png" />

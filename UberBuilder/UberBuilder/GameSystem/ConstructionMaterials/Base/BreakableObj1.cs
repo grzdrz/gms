@@ -20,8 +20,10 @@ using UberBuilder.GameSystem.ConstructionMaterials.Base;
 
 namespace UberBuilder.GameSystem.ConstructionMaterials
 {
-    public class BreakableObj1 : ThrowableBody
+    public class BreakableObj1 //: ThrowableBody
     {
+        public BlockState _blockState = BlockState.Created;
+
         public World _world;
         public ScreenManager _screenManager;
         public Camera2D _camera;
@@ -53,9 +55,9 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public Body body { get { return _breakableBody.MainBody; } }
         //public bool IsCanDraw { get; set; }
 
-        //для отрисовки траектории
-        private Dictionary<int, ThrowableBody> _throwableBodies = new Dictionary<int, ThrowableBody>();
-        public Dictionary<int, ThrowableBody> throwableBodies { get { return _throwableBodies; } }
+        ////для отрисовки траектории
+        //private Dictionary<int, ThrowableBody> _throwableBodies = new Dictionary<int, ThrowableBody>();
+        //public Dictionary<int, ThrowableBody> throwableBodies { get { return _throwableBodies; } }
 
         public BreakableObj1(
             World world,
@@ -73,7 +75,6 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _texturePath = texturePath;
             _textureScale = scale;
             _triangulationAlgorithm = triangulationAlgorithm;
-
 
             #region "Триангуляция текстуры в полигоны"
             //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
@@ -104,7 +105,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _breakableBody = new SegmentableBody(_world, triangulated, 1);
             _breakableBody.MainBody.Position = position;
             //_breakableBody.MainBody.Mass = 5f;
-            _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 2f);
+            _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 10f);
             _breakableBody.Strength = /*50*/strength;
             #endregion
 
@@ -195,7 +196,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
 
             effect = new BasicEffect(_screenManager.GraphicsDevice);
-            texture = _screenManager.Content.Load<Texture2D>(/*"wood2"*/"wood-plank2");
+            texture = _screenManager.Content.Load<Texture2D>(/*"wood2"*//*"wood-plank2"*/texturePath);
             effect.TextureEnabled = true;
             effect.Texture = texture;
 
@@ -219,6 +220,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             //IsCanDraw = true;
         }
 
+        public float fixedRotation;
         public virtual void Update(FixedMouseJoint fixedMouseJoint)
         {
             if (_breakableBody.State == SegmentableBody.BreakableBodyState.ShouldBreak)
@@ -254,6 +256,8 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             {
                 _breakableBody.Update();
             }
+
+            if (this._blockState == BlockState.Griped) body.Rotation = fixedRotation;
         }
 
         public void Draw()
@@ -364,25 +368,25 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             return test.Select(b => b.origin).ToArray();
         }
 
-        public void SetTrajectoriesObjects()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                _throwableBodies[i] = new BreakableObj1(
-                    _world,
-                    _screenManager,
-                    this.body.Position,
-                    _camera,
-                    _texturePath,
-                    _triangulationAlgorithm,
-                    _textureScale, 
-                    9999);
-                Category c = (Category)((int)Math.Pow(2, (i + 2)));
-                _throwableBodies[i].body.SetCollisionCategories(c);
-                _throwableBodies[i].body.SetCollidesWith(c);
-                _world.Remove(_throwableBodies[i].body);
-            }
-        }
+        //public void SetTrajectoriesObjects()
+        //{
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        _throwableBodies[i] = new BreakableObj1(
+        //            _world,
+        //            _screenManager,
+        //            this.body.Position,
+        //            _camera,
+        //            _texturePath,
+        //            _triangulationAlgorithm,
+        //            _textureScale, 
+        //            9999);
+        //        Category c = (Category)((int)Math.Pow(2, (i + 2)));
+        //        _throwableBodies[i].body.SetCollisionCategories(c);
+        //        _throwableBodies[i].body.SetCollidesWith(c);
+        //        _world.Remove(_throwableBodies[i].body);
+        //    }
+        //}
     }
 
     public class TwoVectorsContainer1//контейнер для сортировки вершин относительно центройда их полигона
@@ -459,5 +463,14 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 5,6,0,
                 6,7,0
          };
+    }
+
+    public enum BlockState
+    {
+        Created,
+        Griped,
+        Throwed,
+        Frized,
+        Unfrized
     }
 }

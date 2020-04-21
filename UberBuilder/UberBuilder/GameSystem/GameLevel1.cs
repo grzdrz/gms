@@ -18,7 +18,6 @@ using tainicom.Aether.Physics2D.Samples.DemosTEST.Prefabs;
 using tainicom.Aether.Physics2D.Samples.ScreenSystem;
 using UberBuilder.GameSystem.ConstructionMaterials;
 using UberBuilder.GameSystem.StaticGameObjects;
-using UberBuilder.GameSystem.ControllableCharacters;
 using tainicom.Aether.Physics2D.Samples.DrawingSystem;
 using tainicom.Aether.Physics2D.Dynamics;
 using System.IO;
@@ -34,12 +33,9 @@ namespace UberBuilder.GameSystem
         public float _halfHeight;
 
         public Border _border;
-        //public WoodBlock _woodBlock;
+
         public List<BreakableObj1> _blocks;
         public BreakableObj1 _targetBlock;
-        public UBuilder _uberBuilder;
-
-        public ThrowTrajectory _throwTrajectory;
 
         public BuildingSilhouette _silhouette;
 
@@ -87,62 +83,36 @@ namespace UberBuilder.GameSystem
             float halfWidth = _halfWidth = _width / 2f;
             float halfHeight = _halfHeight = _height / 2f;
 
+
             DebugView.AppendFlags(DebugViewFlags.Shape);
 
-            World.Gravity = /*Vector2.Zero*/new Vector2(0, -9.82f);
+            World.Gravity = new Vector2(0, -9.82f);
 
             _border = new Border(World, ScreenManager, Camera);
 
-            //_woodBlock = new WoodBlock(
-            //    World,
-            //    ScreenManager,
-            //    new Vector2(0f, 0f),
-            //    Camera,
-            //    "wood-plank2"/*"Samples/object"*/,
-            //    TriangulationAlgorithm.Bayazit, 
-            //    new Vector2(0.3f, 0.05f),
-            //    50f);
-            //_woodBlock.SetTrajectoriesObjects();
-
             _blocks = new List<BreakableObj1>();
-
-            _uberBuilder = new UBuilder(
-                World,
-                ScreenManager,
-                new Vector2(-halfWidth + 10f, -halfHeight + 10f),
-                Camera);
-            _uberBuilder._body.BodyType = BodyType.Dynamic;
-
-            _throwTrajectory = new ThrowTrajectory(
-                World,
-                ScreenManager);
-            //_throwTrajectory.SetBodyToThrow(_woodBlock);
-
 
             _silhouette = new BuildingSilhouette(
                 World,
                 ScreenManager,
-                new Vector2(this._halfHeight / 2f, 0f)/*new Vector2(0f, 0f)*/,
+                new Vector2(this._halfHeight / 2f, 0f),
                 Camera,
-                new Vector2(20f, 30f)
-                /*"silhouettePath",*/);
+                new Vector2(20f, 30f));
 
             TEST();
         }
 
-        public bool ThrowIsCalculated = false;
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            //_woodBlock.Update(this._fixedMouseJoint);
             foreach (var b in _blocks)
             {
                 b.Update(this._fixedMouseJoint);
             }
-            _uberBuilder.Update();
-            _throwTrajectory.Update(this);
+
             _silhouette.Update();
+
 
             if (IsGameEnd) ScreenOfFinalBuilding();
             if (IsCameCanMove)
@@ -159,13 +129,10 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            //_woodBlock.Draw();
             foreach (var b in _blocks)
             {
                 b.Draw();
             }
-            _uberBuilder.Draw();
-            _throwTrajectory.Draw(isMouseLeftButtonPressed);
             _silhouette.Draw(ScreenManager.SpriteBatch);
 
             TESTDraw();
@@ -215,14 +182,14 @@ namespace UberBuilder.GameSystem
 
 
         public Body bodyToThrow;
-        public Vector2 throwForce = Vector2.Zero;
         public IsMouseLeftButtonPressed isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
         public BreakableObj1 tBlock = null;
         protected override void HandleCursor(InputHelper input)
         {
-            #region "Захват тела и создание объектов-траектории для него"
+            #region "Манипуляции с блоками"
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);//пиксели -> местные координаты???
 
+            //захватить блок
             if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
             {
                 tBlock = null;
@@ -230,9 +197,10 @@ namespace UberBuilder.GameSystem
                 if (savedFixture != null)
                 {
                     bodyToThrow = savedFixture.Body;
-                    if ((tBlock = _blocks.FirstOrDefault(a => a.body == bodyToThrow)) != null)
+                    if ((tBlock = _blocks.FirstOrDefault(a => a.body == bodyToThrow)) != null &&
+                        tBlock._blockState == BlockState.Created)
                     {
-                        _throwTrajectory.SetBodyToThrow(tBlock);
+                        //_throwTrajectory.SetBodyToThrow(tBlock);
                         //bodyToThrow.BodyType = BodyType.Dynamic;
                         _fixedMouseJoint = new FixedMouseJoint(bodyToThrow, position);
                         _fixedMouseJoint.MaxForce = 1000.0f * bodyToThrow.Mass;
@@ -240,27 +208,70 @@ namespace UberBuilder.GameSystem
                         bodyToThrow.Awake = true;
 
                         isMouseLeftButtonPressed = IsMouseLeftButtonPressed.Yes;
+                        tBlock._blockState = BlockState.Griped;
+                        tBlock.fixedRotation = tBlock.body.Rotation;
                     }
                 }
                 else savedFixture = null;
             }
 
+            //перетаскивать блок
             if ((input.IsNewButtonRelease(Buttons.A) || input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) && _fixedMouseJoint != null)
             {
                 World.Remove(_fixedMouseJoint);
                 _fixedMouseJoint = null;
                 if (bodyToThrow == tBlock.body)
                 {
-                    throwForce = (_uberBuilder._originPosition - bodyToThrow.Position) * 500f;
-                    bodyToThrow.ApplyForce(throwForce);
-
-                    foreach (var e in tBlock.throwableBodies)
-                    {
-                        if(World.BodyList.Contains(e.Value.body)) 
-                            World.Remove(e.Value.body);
-                    }
                     isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
+                    tBlock._blockState = BlockState.Throwed;
                 }
+            }
+
+            //заморозить блок
+            if (tBlock != null)
+            {
+                if (input.IsNewKeyPress(Keys.Space) && tBlock._blockState == BlockState.Throwed)
+                {
+                    tBlock.body.BodyType = BodyType.Static;
+                    tBlock.body.SetCollisionCategories(Category.None);
+                    tBlock.body.SetCollidesWith(Category.None);
+                }
+            }
+
+            //повернуть блок
+            if (tBlock != null)
+            {
+                if ((input.KeyboardState.IsKeyDown(Keys.Z)) && tBlock._blockState == BlockState.Griped)
+                {
+                        tBlock.fixedRotation += 0.05f;
+                }
+            }
+
+            //разморозить блоки
+            if (input.IsNewKeyPress(Keys.F))
+            {
+                foreach (var e in _blocks)
+                {
+                    e.body.BodyType = BodyType.Dynamic;
+                    e.body.SetCollisionCategories(Category.Cat1);
+                    e.body.SetCollidesWith(Category.Cat1);
+                }
+            }
+
+            //создать блок
+            if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
+            {
+                _blocks.Add(new WoodBlock(
+                    World,
+                    ScreenManager,
+                    new Vector2(-10f, 0f),
+                    Camera,
+                    "wood-plank3",
+                    TriangulationAlgorithm.Bayazit,
+                    new Vector2(0.6f, 0.04f/*0.4f, 0.4f*/),
+                    50f));
+                //_blocks.Last().SetTrajectoriesObjects();
+                _blocks.Last()._blockState = BlockState.Created;
             }
 
             if (_fixedMouseJoint != null)
@@ -274,20 +285,6 @@ namespace UberBuilder.GameSystem
             //    HasCursor = false;   
             //}
             #endregion
-
-            if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
-            {
-                _blocks.Add(new WoodBlock(
-                    World,
-                    ScreenManager,
-                    new Vector2(-10f, 0f),
-                    Camera,
-                    "wood-plank2"/*"Samples/object"*/,
-                    TriangulationAlgorithm.Bayazit,
-                    new Vector2(0.3f, 0.05f),
-                    50f));
-                _blocks.Last().SetTrajectoriesObjects();
-            }
         }
 
         public bool IsGameEnd = false;

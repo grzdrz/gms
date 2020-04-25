@@ -68,7 +68,8 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin();
-            ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, Color.White);
+            //ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, Color.White);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, null, Color.White, 0f, new Vector2(0f, 0f), SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White * 0.6f);
             ScreenManager.SpriteBatch.End();
         }

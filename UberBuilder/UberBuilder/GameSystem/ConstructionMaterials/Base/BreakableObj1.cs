@@ -164,7 +164,11 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 
                 var temp3 = VertexClockwiseSort(tempUnsorted, centr);
 
-                
+                //for (int j = 0; j < temp3.Length; j++)
+                //{
+                //    temp3[j].Position.Z = -10f;/////////////////////////////////////////////
+                //}
+
                 for (int j = 0; j < temp3.Length; j++)
                 {
                     temp3[j].TextureCoordinate.X = ((temp3[j].TextureCoordinate.X + leftOffsetFromZero) / ((mainBodyWidth/*width*/)));

@@ -19,17 +19,22 @@ namespace UberBuilder.GameSystem.StaticGameObjects
 
         public Body _body;
         public Sprite _sprite;
+        public string _texturePath;
+        public Vector2 scaleKoef;
 
-        public BuildingSilhouette(World world, ScreenManager screenManager, Vector2 position, Camera2D camera2D, Vector2 size)
+        public BuildingSilhouette(World world, ScreenManager screenManager, Vector2 position, Camera2D camera2D, Vector2 size, string texturePath)
         {
             _world = world;
             _screenManager = screenManager;
             _camera = camera2D;
+            _texturePath = texturePath;
 
             _body = _world.CreateRectangle(size.X, size.Y, 1f, position, 0f, BodyType.Static);
-            _body.SetCollisionCategories(Category.Cat30);
-            _body.SetCollidesWith(Category.Cat30);
-            _sprite = new Sprite(_screenManager.Assets.TextureFromShape(_body.FixtureList[0].Shape, MaterialType.Waves, Color.Red, 1f));
+            _body.SetCollisionCategories(Category.None);
+            _body.SetCollidesWith(Category.None);
+            //_sprite = new Sprite(_screenManager.Assets.TextureFromShape(_body.FixtureList[0].Shape, MaterialType.Waves, Color.Red, 1f));
+            _sprite = new Sprite(_screenManager.Content.Load<Texture2D>(_texturePath));
+            scaleKoef = _sprite.Size / size;
         }
 
         public void Update()
@@ -37,9 +42,18 @@ namespace UberBuilder.GameSystem.StaticGameObjects
             
         }
 
-        public void Draw(SpriteBatch batch)
+        public void Draw()
         {
-            
+            _screenManager.SpriteBatch.Draw(
+                _sprite.Texture,
+                _body.Position,
+                null,
+                Color.White,
+                _body.Rotation,
+                _sprite.Origin,
+                (_sprite.Size * _sprite.TexelSize * (1f / 24f)) * 1.3f,
+                SpriteEffects.FlipVertically,
+                0f);
         }
     }
 }

@@ -84,7 +84,7 @@ namespace UberBuilder.GameSystem
             float halfHeight = _halfHeight = _height / 2f;
 
 
-            DebugView.AppendFlags(DebugViewFlags.Shape);
+            //DebugView.AppendFlags(DebugViewFlags.Shape);
 
             World.Gravity = new Vector2(0, -9.82f);
 
@@ -95,9 +95,10 @@ namespace UberBuilder.GameSystem
             _silhouette = new BuildingSilhouette(
                 World,
                 ScreenManager,
-                new Vector2(this._halfHeight / 2f, 0f),
+                new Vector2(/*this._halfHeight / 2f*/0f, 0f),
                 Camera,
-                new Vector2(20f, 30f));
+                new Vector2(20f, 30f),
+                "building31");
 
             TEST();
         }
@@ -115,12 +116,12 @@ namespace UberBuilder.GameSystem
 
 
             if (IsGameEnd) ScreenOfFinalBuilding();
-            if (IsCameCanMove)
-            {
-                if (Camera.Position.X < _silhouette._body.Position.X)
-                    Camera.MoveCamera(new Vector2(0.05f, 0f));
-                else IsCameCanMove = false;
-            }
+            //if (IsCameCanMove)
+            //{
+            //    if (Camera.Position.X < _silhouette._body.Position.X)
+            //        Camera.MoveCamera(new Vector2(0.05f, 0f));
+            //    else IsCameCanMove = false;
+            //}
         }
 
         public override void Draw(GameTime gameTime)
@@ -129,11 +130,11 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
+            _silhouette.Draw();
             foreach (var b in _blocks)
             {
                 b.Draw();
             }
-            _silhouette.Draw(ScreenManager.SpriteBatch);
 
             TESTDraw();
 
@@ -143,12 +144,10 @@ namespace UberBuilder.GameSystem
             base.Draw(gameTime);
         }
 
-        public override void UnloadContent()
-        {
-            DebugView.RemoveFlags(DebugViewFlags.Shape);
 
-            base.UnloadContent();
-        }
+
+
+
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
@@ -177,12 +176,7 @@ namespace UberBuilder.GameSystem
             base.HandleInput(input, gameTime);
         }
 
-
-
-
-
         public Body bodyToThrow;
-        public IsMouseLeftButtonPressed isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
         public BreakableObj1 tBlock = null;
         protected override void HandleCursor(InputHelper input)
         {
@@ -197,8 +191,7 @@ namespace UberBuilder.GameSystem
                 if (savedFixture != null)
                 {
                     bodyToThrow = savedFixture.Body;
-                    if ((tBlock = _blocks.FirstOrDefault(a => a.body == bodyToThrow)) != null &&
-                        tBlock._blockState == BlockState.Created)
+                    if ((tBlock = _blocks.FirstOrDefault(a => a.body == bodyToThrow)) != null)
                     {
                         //_throwTrajectory.SetBodyToThrow(tBlock);
                         //bodyToThrow.BodyType = BodyType.Dynamic;
@@ -207,7 +200,6 @@ namespace UberBuilder.GameSystem
                         World.Add(_fixedMouseJoint);
                         bodyToThrow.Awake = true;
 
-                        isMouseLeftButtonPressed = IsMouseLeftButtonPressed.Yes;
                         tBlock._blockState = BlockState.Griped;
                         tBlock.fixedRotation = tBlock.body.Rotation;
                     }
@@ -222,7 +214,6 @@ namespace UberBuilder.GameSystem
                 _fixedMouseJoint = null;
                 if (bodyToThrow == tBlock.body)
                 {
-                    isMouseLeftButtonPressed = IsMouseLeftButtonPressed.No;
                     tBlock._blockState = BlockState.Throwed;
                 }
             }
@@ -230,11 +221,13 @@ namespace UberBuilder.GameSystem
             //заморозить блок
             if (tBlock != null)
             {
-                if (input.IsNewKeyPress(Keys.Space) && tBlock._blockState == BlockState.Throwed)
+                if (input.IsNewKeyPress(Keys.Space) && (tBlock._blockState == BlockState.Throwed || tBlock._blockState == BlockState.Griped))
                 {
                     tBlock.body.BodyType = BodyType.Static;
-                    tBlock.body.SetCollisionCategories(Category.None);
-                    tBlock.body.SetCollidesWith(Category.None);
+                    //tBlock.body.SetCollisionCategories(Category.None);
+                    //tBlock.body.SetCollidesWith(Category.None);
+
+                    tBlock._blockState = BlockState.Throwed;
                 }
             }
 
@@ -243,7 +236,11 @@ namespace UberBuilder.GameSystem
             {
                 if ((input.KeyboardState.IsKeyDown(Keys.Z)) && tBlock._blockState == BlockState.Griped)
                 {
-                        tBlock.fixedRotation += 0.05f;
+                        tBlock.fixedRotation += 0.02f;
+                }
+                if ((input.KeyboardState.IsKeyDown(Keys.C)) && tBlock._blockState == BlockState.Griped)
+                {
+                    tBlock.fixedRotation -= 0.02f;
                 }
             }
 
@@ -266,11 +263,10 @@ namespace UberBuilder.GameSystem
                     ScreenManager,
                     new Vector2(-10f, 0f),
                     Camera,
-                   /* "wood-plank3"*/"yabloko",
+                    "wood-plank3"/*"vilka"*/,
                     TriangulationAlgorithm.Bayazit,
-                    new Vector2(/*0.6f, 0.04f*/50f, 50f),
+                    /*new Vector2(0.1f, 0.4f)*/new Vector2(0.5f, 0.05f),
                     500f));
-                //_blocks.Last().SetTrajectoriesObjects();
                 _blocks.Last()._blockState = BlockState.Created;
             }
 
@@ -279,22 +275,24 @@ namespace UberBuilder.GameSystem
             #endregion
 
             #region "Смещение камеры к силуэту, его снимок и обработка"
-            //if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
-            //{
-            //    IsGameEnd = true;
-            //    HasCursor = false;   
-            //}
+            if (input.IsNewKeyPress(Keys.Q))
+            {
+                IsGameEnd = true;
+                HasCursor = false;
+            }
             #endregion
         }
+
+
 
         public bool IsGameEnd = false;
         public bool IsColorArrayProcessed = false;
         public bool IsCameCanMove = false;
         public async void ScreenOfFinalBuilding()
         {
-            await Task.Run(() =>
+            if (!IsColorArrayProcessed)
             {
-                if (!IsColorArrayProcessed)
+                await Task.Run(() =>
                 {
                     IsColorArrayProcessed = true;
 
@@ -320,12 +318,11 @@ namespace UberBuilder.GameSystem
                     Vector2 rectBorderOfObjCoords = new Vector2();
                     rectBorderOfObjCoords.X = positionInPixels.X - (w1 / 2f);
                     rectBorderOfObjCoords.Y = positionInPixels.Y + (h1 / 2f);
-                    //Rectangle boundRectangle = ;
                     Color[] colors = new Color[w1 * h1];
                     texture.GetData<Color>(
                         0,
                         new Rectangle(
-                            (int)(rectBorderOfObjCoords.X) + 20,
+                            (int)(rectBorderOfObjCoords.X)/* + 20*/,
                             /*(int)(rectBorderOfObjCoords.Y)*/0,
                             w1,
                             h1),
@@ -377,13 +374,22 @@ namespace UberBuilder.GameSystem
                         bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
                     }
                     texture.Dispose();
-                }
-            });
-
+                });
+            }
             IsCameCanMove = true;//запуск движения камеры
             #endregion
         }
 
+
+
+
+
+        public override void UnloadContent()
+        {
+            //DebugView.RemoveFlags(DebugViewFlags.Shape);
+
+            base.UnloadContent();
+        }
 
 
         #region "TEST DOTS"

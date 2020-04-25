@@ -138,6 +138,9 @@
     <Content Include="Content\gameObjs\building1.png" />
     <Content Include="Content\gameObjs\building3.png" />
     <Content Include="Content\gameObjs\bootilka1.png" />
+    <Content Include="Content\gameObjs\building31.png" />
+    <Content Include="Content\gameObjs\building32.png" />
+    <Content Include="Content\gameObjs\building33.png" />
     <Content Include="Content\gameObjs\vilka.png" />
     <Content Include="Content\gameObjs\yabloko.png" />
     <Content Include="Content\gameObjs\wood-plank3.png" />

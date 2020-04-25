@@ -15,6 +15,9 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/stick.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Effects/LightEffect.fx</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/bootilka1.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building31.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building32.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building33.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/vilka.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/yabloko.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/blank.png</File>
@@ -35,6 +38,9 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-plank5.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

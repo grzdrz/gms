@@ -45,7 +45,7 @@ namespace tainicom.Aether.Physics2D.Samples.Samples.TEST
                 _circleSprite.Origin, 
                 new Vector2(2f * 1.5f) * _circleSprite.TexelSize,
                 SpriteEffects.FlipVertically,
-                0f);
+                1f);
         }
     }
 }

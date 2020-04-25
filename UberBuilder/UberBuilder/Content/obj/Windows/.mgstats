@@ -1,5 +1,8 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/cursor.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Common/cursor.xnb","TextureProcessor","Texture2DContent",4397,4181,0
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/slider.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Common/slider.xnb","TextureProcessor","Texture2DContent",637,1685,0
+"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building31.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/gameObjs/building31.xnb","TextureProcessor","Texture2DContent",22688,891313,2,015557
+"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building32.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/gameObjs/building32.xnb","TextureProcessor","Texture2DContent",21054,891313,0,0781211
+"C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building33.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/gameObjs/building33.xnb","TextureProcessor","Texture2DContent",17613,891313,0,1093712
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/waves.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Materials/waves.xnb","TextureProcessor","Texture2DContent",1172,16469,0
 "C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/link.png","C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/bin/Windows/Samples/link.xnb","TextureProcessor","Texture2DContent",260,597,0

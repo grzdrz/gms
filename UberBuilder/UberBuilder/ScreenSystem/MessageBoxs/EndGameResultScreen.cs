@@ -30,10 +30,13 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public Vector2 _starSize;
 
-        public EndGameResultScreen(string title, string message)
+        public int _starCount;
+
+        public EndGameResultScreen(string title, string message, int starCount)
         {
             _title = title;
             _message = message;
+            _starCount = starCount;
 
             IsPopup = true;
             HasCursor = true;
@@ -81,7 +84,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 _starSize = new Vector2(bWidth = (viewportSize.Y / 13f), bWidth);
             _backgroundRectangleStars = new List<Rectangle>();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < /*5*/_starCount; i++)
             {
                 _backgroundRectangleStars.Add(new Rectangle(
                         (int)((viewportSize.X / 2f - (_starSize.X / (2f * 0.9f)) * (5f - i * 2)) + 
@@ -130,7 +133,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             // Draw the background rectangle.
             //spriteBatch.Draw(_gradientTexture, backgroundRectangle, bgColor);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _starCount; i++)
                 spriteBatch.Draw(_star, _backgroundRectangleStars[i], Color.White * TransitionAlpha);
             
             // Draw the title text.

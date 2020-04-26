@@ -278,13 +278,14 @@ namespace UberBuilder.GameSystem
             //вывести звезды
             if (input.IsNewKeyPress(Keys.E))
             {
-                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails());
+                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
 
                 ScreenManager.AddScreen(TESTMsg);
             }
             #endregion
         }
         EndGameResultScreen TESTMsg;
+        int starCount = 0;
 
 
 
@@ -374,59 +375,61 @@ namespace UberBuilder.GameSystem
                     }
                     }
 
-                    //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\333.png", FileMode.Create, FileAccess.ReadWrite))
-                    //{
-                    //    bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
-                    //}
+                //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\333.png", FileMode.Create, FileAccess.ReadWrite))
+                //{
+                //    bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                //}
 
-                    #region "saveAsFile"
-                    System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
-                    System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
-                        new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
-                        w1 / 5,
-                        h1 / 5);
-                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\11.png", FileMode.Create, FileAccess.ReadWrite))
+                #region "saveAsFile"
+                //System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
+                //System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
+                //    new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
+                //    w1 / 5,
+                //    h1 / 5);
+                //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\11.png", FileMode.Create, FileAccess.ReadWrite))
+                //{
+                //    bitmap2.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                //}
+                //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\22.png", FileMode.Create, FileAccess.ReadWrite))
+                //{
+                //    bitmapSource.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                //}
+                #endregion
+
+                System.Drawing.Bitmap bitmapGame = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
+                System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
+                    new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
+                    w1 / 5,
+                    h1 / 5);
+                float coincidencesCount = 0.001f;
+                float countOfBlackPixelsInSource = 0.001f;
+                for (int i = 0; i < bitmapGame.Height; i++)
+                {
+                    for (int j = 0; j < bitmapGame.Width; j++)
                     {
-                        bitmap2.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                        var c1 = bitmapGame.GetPixel(j, i);
+                        var c2 = bitmapSource.GetPixel(j, i);
+                        if (c1.R == c2.R && c2.R == (byte)0 &&
+                           c1.G == c2.G && c2.G == (byte)0 &&
+                           c1.B == c2.B && c2.B == (byte)0 &&
+                           c1.A == c2.A && c2.A == (byte)255)
+                            coincidencesCount++;
+
+                        if (c2.A == 255) countOfBlackPixelsInSource++;
                     }
-                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\22.png", FileMode.Create, FileAccess.ReadWrite))
-                    {
-                        bitmapSource.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
-                    }
-                    #endregion
+                }
 
-                    //System.Drawing.Bitmap bitmapGame = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
-                    //System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
-                    //    new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
-                    //    w1 / 5,
-                    //    h1 / 5);
-                    //float coincidencesCount = 0.001f;
-                    //float countOfBlackPixelsInSource = 0.001f;
-                    //for (int i = 0; i < bitmapGame.Height; i++)
-                    //{
-                    //    for (int j = 0; j < bitmapGame.Width; j++)
-                    //    {
-                    //        var c1 = bitmapGame.GetPixel(j, i);
-                    //        var c2 = bitmapSource.GetPixel(j, i);
-                    //        if (c1.R == c2.R && c2.R == (byte)0 &&
-                    //           c1.G == c2.G && c2.G == (byte)0 &&
-                    //           c1.B == c2.B && c2.B == (byte)0 &&
-                    //           c1.A == c2.A && c2.A == (byte)255)
-                    //            coincidencesCount++;
+                float result = coincidencesCount / countOfBlackPixelsInSource;
+                if (result > 0.8f) starCount = 5;
+                else if (result > 0.6f && result <= 0.8f) starCount = 4;
+                else if (result > 0.4f && result <= 0.6f) starCount = 3;
+                else if (result > 0.2f && result <= 0.4f) starCount = 2;
+                else starCount = 1;
 
-                    //        if (c2.A == 255) countOfBlackPixelsInSource++;
-                    //    }
-                    //}
+                texture.Dispose();
 
-                    //float result = coincidencesCount / countOfBlackPixelsInSource/*(float)(bitmapGame.Width * bitmapGame.Height)*/;
-
-                    texture.Dispose();
-
-                    ////////////////////////////////////////////////////////////////////////////////////
-                    //var msg = new MessageBoxScreen(this.GetTitle(), this.GetDetails());
-
-                    //ScreenManager.AddScreen(new MessageBoxScreen(this.GetTitle(), this.GetDetails()));
-                //});
+                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
+                ScreenManager.AddScreen(TESTMsg);
             }
             IsCameCanMove = true;//запуск движения камеры
             #endregion

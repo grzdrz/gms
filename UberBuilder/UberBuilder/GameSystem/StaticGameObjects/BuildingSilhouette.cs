@@ -21,6 +21,7 @@ namespace UberBuilder.GameSystem.StaticGameObjects
         public Sprite _sprite;
         public string _texturePath;
         public Vector2 scaleKoef;
+        public Vector2 _position;
 
         public BuildingSilhouette(World world, ScreenManager screenManager, Vector2 position, Camera2D camera2D, Vector2 size, string texturePath)
         {
@@ -28,6 +29,7 @@ namespace UberBuilder.GameSystem.StaticGameObjects
             _screenManager = screenManager;
             _camera = camera2D;
             _texturePath = texturePath;
+            _position = position;
 
             _body = _world.CreateRectangle(size.X, size.Y, 1f, position, 0f, BodyType.Static);
             _body.SetCollisionCategories(Category.None);
@@ -35,6 +37,7 @@ namespace UberBuilder.GameSystem.StaticGameObjects
             var tempSprite = new Sprite(_screenManager.Assets.TextureFromShape(_body.FixtureList[0].Shape, MaterialType.Waves, Color.Red, 1f));
             _sprite = new Sprite(_screenManager.Content.Load<Texture2D>(_texturePath));
             scaleKoef = _sprite.Size / tempSprite.Size;
+            //_world.Remove(_body);
 
 
             var vp = _screenManager.GraphicsDevice.Viewport;
@@ -59,10 +62,10 @@ namespace UberBuilder.GameSystem.StaticGameObjects
         {
             _screenManager.SpriteBatch.Draw(
                 _sprite.Texture,
-                _body.Position,
+                /*_body.Position*/_position,
                 null,
                 Color.White,
-                _body.Rotation,
+                /*_body.Rotation*/0f,
                 _sprite.Origin,
                 Vector2.One * (1f / 24f) / scaleKoef,
                 SpriteEffects.FlipVertically,

@@ -136,6 +136,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Common\gradient1.png" />
     <Content Include="Content\gameObjs\building1.png" />
     <Content Include="Content\gameObjs\building3.png" />
     <Content Include="Content\gameObjs\bootilka1.png" />

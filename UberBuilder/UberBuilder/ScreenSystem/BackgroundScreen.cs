@@ -37,7 +37,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         public override void LoadContent()
         {
             _logoTexture = ScreenManager.Content.Load<Texture2D>("Common/logo");
-            _backgroundTexture = ScreenManager.Content.Load<Texture2D>("Common/gradient");
+            _backgroundTexture = ScreenManager.Content.Load<Texture2D>(/*"Common/gradient"*/"Common/gradient1");
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 logoSize = new Vector2();
@@ -75,3 +75,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         }
     }
 }
+
+
+
+//61 96 119

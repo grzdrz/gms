@@ -8,6 +8,7 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/buttons.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/cursor.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/gradient.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/gradient1.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/logo.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/popup.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/slider.png</File>
@@ -39,6 +40,7 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-plank5.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

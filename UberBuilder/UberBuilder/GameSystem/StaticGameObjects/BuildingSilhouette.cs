@@ -32,10 +32,23 @@ namespace UberBuilder.GameSystem.StaticGameObjects
             _body = _world.CreateRectangle(size.X, size.Y, 1f, position, 0f, BodyType.Static);
             _body.SetCollisionCategories(Category.None);
             _body.SetCollidesWith(Category.None);
-            //_sprite = new Sprite(_screenManager.Assets.TextureFromShape(_body.FixtureList[0].Shape, MaterialType.Waves, Color.Red, 1f));
+            var tempSprite = new Sprite(_screenManager.Assets.TextureFromShape(_body.FixtureList[0].Shape, MaterialType.Waves, Color.Red, 1f));
             _sprite = new Sprite(_screenManager.Content.Load<Texture2D>(_texturePath));
-            scaleKoef = _sprite.Size / size;
+            scaleKoef = _sprite.Size / tempSprite.Size;
+
+
+            var vp = _screenManager.GraphicsDevice.Viewport;
+            _height = 30f; // 30 meters height
+            _width = _height * vp.AspectRatio;
+            _width -= 1.5f; // 1.5 meters border
+            _height -= 1.5f;
+            float halfWidth = _halfWidth = _width / 2f;
+            float halfHeight = _halfHeight = _height / 2f;
         }
+        float _height;
+        float _width;
+        float _halfWidth;
+        float _halfHeight;
 
         public void Update()
         {
@@ -51,7 +64,7 @@ namespace UberBuilder.GameSystem.StaticGameObjects
                 Color.White,
                 _body.Rotation,
                 _sprite.Origin,
-                (_sprite.Size * _sprite.TexelSize * (1f / 24f)) * 1.3f,
+                Vector2.One * (1f / 24f) / scaleKoef,
                 SpriteEffects.FlipVertically,
                 0f);
         }

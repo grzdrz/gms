@@ -97,7 +97,7 @@ namespace UberBuilder.GameSystem
                 ScreenManager,
                 new Vector2(/*this._halfHeight / 2f*/0f, 0f),
                 Camera,
-                new Vector2(20f, 30f),
+                new Vector2(20f, _height),
                 "building31");
 
             TEST();
@@ -116,12 +116,6 @@ namespace UberBuilder.GameSystem
 
 
             if (IsGameEnd) ScreenOfFinalBuilding();
-            //if (IsCameCanMove)
-            //{
-            //    if (Camera.Position.X < _silhouette._body.Position.X)
-            //        Camera.MoveCamera(new Vector2(0.05f, 0f));
-            //    else IsCameCanMove = false;
-            //}
         }
 
         public override void Draw(GameTime gameTime)
@@ -261,7 +255,7 @@ namespace UberBuilder.GameSystem
                 _blocks.Add(new WoodBlock(
                     World,
                     ScreenManager,
-                    new Vector2(-10f, 0f),
+                    new Vector2(0f, 0f),
                     Camera,
                     "wood-plank3"/*"vilka"*/,
                     TriangulationAlgorithm.Bayazit,
@@ -280,8 +274,16 @@ namespace UberBuilder.GameSystem
                 IsGameEnd = true;
                 HasCursor = false;
             }
+
+            if (input.IsNewKeyPress(Keys.E))
+            {
+                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails());
+
+                ScreenManager.AddScreen(TESTMsg);
+            }
             #endregion
         }
+        EndGameResultScreen TESTMsg;
 
 
 
@@ -347,7 +349,7 @@ namespace UberBuilder.GameSystem
                                 bitmap.SetPixel(
                                 column,
                                 row,
-                                System.Drawing.Color.FromArgb(255, 255, 255, 255));
+                                System.Drawing.Color.FromArgb(0, 255, 255, 255));
                             }
                             else
                             {
@@ -368,12 +370,50 @@ namespace UberBuilder.GameSystem
                         }
                     }
 
-                    //System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
-                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\1.png", FileMode.Create, FileAccess.ReadWrite))
+                    #region "saveAsFile"
+                    System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
+                    System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
+                        new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
+                        w1 / 5,
+                        h1 / 5);
+                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\11.png", FileMode.Create, FileAccess.ReadWrite))
                     {
-                        bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                        bitmap2.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
                     }
+                    using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\22.png", FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        bitmapSource.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    #endregion
+
+                    //System.Drawing.Bitmap bitmapGame = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
+                    //System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
+                    //    new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
+                    //    w1 / 5,
+                    //    h1 / 5);
+                    //float coincidencesCount = 0.001f;
+                    //for (int i = 0; i < bitmapGame.Height; i++)
+                    //{
+                    //    for (int j = 0; j < bitmapGame.Width; j++)
+                    //    {
+                    //        var c1 = bitmapGame.GetPixel(j, i);
+                    //        var c2 = bitmapSource.GetPixel(j, i);
+                    //        if(c1.R == c2.R &&
+                    //           c1.G == c2.G &&
+                    //           c1.B == c2.B &&
+                    //           c1.A == c2.A)
+                    //            coincidencesCount++;
+                    //    }
+                    //}
+
+                    //float result = coincidencesCount / (float)(bitmapGame.Width * bitmapGame.Height);
+
                     texture.Dispose();
+
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    //var msg = new MessageBoxScreen(this.GetTitle(), this.GetDetails());
+
+                    //ScreenManager.AddScreen(new MessageBoxScreen(this.GetTitle(), this.GetDetails()));
                 });
             }
             IsCameCanMove = true;//запуск движения камеры

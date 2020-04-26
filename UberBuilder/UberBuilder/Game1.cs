@@ -99,6 +99,8 @@ namespace UberBuilder
             ScreenManager.AddScreen(background = new BackgroundScreen());
             ScreenManager.AddScreen(menuScreen);
             ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(3.0)));
+
+            //ScreenManager.AddScreen(new MessageBoxScreen(gameLevel1.GetTitle(), gameLevel1.GetDetails()));
         }
     }
 }

@@ -105,7 +105,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _breakableBody = new SegmentableBody(_world, triangulated, 1);
             _breakableBody.MainBody.Position = position;
             //_breakableBody.MainBody.Mass = 5f;
-            _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 10f);
+            _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 50f);
             _breakableBody.Strength = /*50*/strength;
             #endregion
 

@@ -112,7 +112,7 @@
     <Compile Include="ScreenSystem\Menu\MenuEntry.cs" />
     <Compile Include="ScreenSystem\Menu\MenuScreen.cs" />
     <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
-    <Compile Include="ScreenSystem\MessageBoxs\EndGameResultScreen.cs" />
+    <Compile Include="ScreenSystem\MessageBoxes\EndGameResultScreen.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
     <Compile Include="ScreenSystem\SpriteFonts.cs" />
@@ -137,19 +137,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Common\gradient1.png" />
-    <Content Include="Content\gameObjs\building1.png" />
-    <Content Include="Content\gameObjs\building3.png" />
+    <Content Include="Content\gameObjs\b11.png" />
+    <Content Include="Content\gameObjs\b2.png" />
+    <Content Include="Content\gameObjs\b3.png" />
+    <Content Include="Content\gameObjs\b4.png" />
     <Content Include="Content\gameObjs\bootilka1.png" />
-    <Content Include="Content\gameObjs\building31.png" />
-    <Content Include="Content\gameObjs\building32.png" />
-    <Content Include="Content\gameObjs\building33.png" />
     <Content Include="Content\gameObjs\vilka.png" />
-    <Content Include="Content\gameObjs\yabloko.png" />
     <Content Include="Content\gameObjs\wood-plank3.png" />
-    <Content Include="Content\goldenStar1.png" />
-    <Content Include="Content\wood-plank4.png" />
-    <Content Include="Content\wood-plank5.png" />
-    <Content Include="Content\wood2.png" />
+    <Content Include="Content\gameObjs\goldenStar1.png" />
     <Content Include="Content\Common\arrow.png" />
     <Content Include="Content\Common\buttons.png" />
     <Content Include="Content\Common\cursor.png" />
@@ -160,6 +155,7 @@
     <Content Include="Content\Common\socket.png" />
     <Content Include="Content\Common\stick.png" />
     <Content Include="Content\Effects\LightEffect.fx" />
+    <Content Include="Content\gameObjs\wood-plank33.png" />
     <Content Include="Content\Materials\blank.png" />
     <Content Include="Content\Materials\dots.png" />
     <Content Include="Content\Materials\pavement.png" />

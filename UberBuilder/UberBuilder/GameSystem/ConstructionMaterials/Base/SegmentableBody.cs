@@ -146,7 +146,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             //Unsubsribe from the PostSolve delegate
             World.ContactManager.PostSolve -= PostSolve;
             var oneMass = MainBody.Mass / (float)Parts.Count;
-            var friction = oneMass * 2f;
+            var friction = MainBody.Mass * 50f;
             for (int i = 0; i < Parts.Count; i++)
             {
                 Fixture oldFixture = Parts[i];

@@ -98,7 +98,7 @@ namespace UberBuilder.GameSystem
                 new Vector2(0f, 0f),
                 Camera,
                 new Vector2(20f, _height),
-                "building31");
+                "b3");
 
             //TEST();
         }
@@ -170,6 +170,7 @@ namespace UberBuilder.GameSystem
             base.HandleInput(input, gameTime);
         }
 
+        Random rnd = new Random();
         public Body bodyToThrow;
         public BreakableObj1 tBlock = null;
         protected override void HandleCursor(InputHelper input)
@@ -204,12 +205,18 @@ namespace UberBuilder.GameSystem
             //перетаскивать блок
             if ((input.IsNewButtonRelease(Buttons.A) || input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) && _fixedMouseJoint != null)
             {
-                World.Remove(_fixedMouseJoint);
-                _fixedMouseJoint = null;
                 if (bodyToThrow == tBlock.body)
                 {
+                    if (tBlock._blockState == BlockState.Griped)
+                    {
+                        tBlock.body.AngularVelocity = 0f;
+                    }
+
                     tBlock._blockState = BlockState.Throwed;
                 }
+
+                World.Remove(_fixedMouseJoint);
+                _fixedMouseJoint = null;
             }
 
             //заморозить блок
@@ -230,11 +237,11 @@ namespace UberBuilder.GameSystem
             {
                 if ((input.KeyboardState.IsKeyDown(Keys.Z)) && tBlock._blockState == BlockState.Griped)
                 {
-                        tBlock.fixedRotation += 0.02f;
+                        tBlock.fixedRotation += 0.03f;
                 }
                 if ((input.KeyboardState.IsKeyDown(Keys.C)) && tBlock._blockState == BlockState.Griped)
                 {
-                    tBlock.fixedRotation -= 0.02f;
+                    tBlock.fixedRotation -= 0.03f;
                 }
             }
 
@@ -252,17 +259,49 @@ namespace UberBuilder.GameSystem
             //создать блок
             if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
             {
+                string blockPath = "";
+                Vector2 sizeScale = default;
+                var blockNum = rnd.Next(1, 4);
+                if (blockNum == 1)
+                {
+                    blockPath = "wood-plank3";
+                    sizeScale = new Vector2((float)(rnd.Next(2, 7)) / 10f, 0.04f);
+                }
+                else if (blockNum == 2)
+                {
+                    blockPath = "wood-plank33";
+                    sizeScale = new Vector2((float)(rnd.Next(2, 7)) / 10f, 0.04f);
+                }
+                else
+                {
+                    blockPath = "bootilka1";
+                    sizeScale = new Vector2(0.1f, 0.3f);
+                }
+
                 _blocks.Add(new WoodBlock(
                     World,
                     ScreenManager,
-                    new Vector2(0f, 0f),
+                    new Vector2(-15f, -10f),
                     Camera,
-                    "wood-plank3"/*"vilka"*/,
+                    blockPath,
                     TriangulationAlgorithm.Bayazit,
-                    /*new Vector2(0.1f, 0.4f)*/new Vector2(0.5f, 0.05f),
-                    500f));
+                    sizeScale,
+                    50f));
                 _blocks.Last()._blockState = BlockState.Created;
             }
+            //if (input.IsNewKeyPress(Keys.R))
+            //{
+            //    _blocks.Add(new WoodBlock(
+            //        World,
+            //        ScreenManager,
+            //         new Vector2(-15f, -10f),
+            //        Camera,
+            //        "wood-plank33",
+            //        TriangulationAlgorithm.Bayazit,
+            //        new Vector2((float)(rnd.Next(1, 6)) / 10f, 0.04f),
+            //        50f));
+            //    _blocks.Last()._blockState = BlockState.Created;
+            //}
 
             if (_fixedMouseJoint != null)
                 _fixedMouseJoint.WorldAnchorB = position;

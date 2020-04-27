@@ -15,13 +15,15 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/socket.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Common/stick.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Effects/LightEffect.fx</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b11.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b2.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b3.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b4.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/bootilka1.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building31.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building32.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/building33.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/goldenStar1.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/vilka.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/yabloko.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/goldenStar1.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank3.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank33.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/blank.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/dots.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/pavement.png</File>
@@ -33,16 +35,8 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/link.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/object.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/wheel.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood2.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-plank2.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-plank4.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/wood-plank5.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

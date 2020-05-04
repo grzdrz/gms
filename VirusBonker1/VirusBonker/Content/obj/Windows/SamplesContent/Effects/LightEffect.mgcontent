@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>C:/Users/space/Downloads/SpaceRuner-20200404T154335Z-001/SpaceRuner/Samples/SamplesContent/Effects/LightEffect.fx</SourceFile>
+  <SourceTime>2019-10-25T16:03:14+07:00</SourceTime>
+  <DestFile>C:/Users/space/Downloads/SpaceRuner-20200404T154335Z-001/SpaceRuner/Samples/SamplesContent/bin/Windows/SamplesContent/Effects/LightEffect.xnb</DestFile>
+  <DestTime>2020-04-04T22:53:34.6979981+07:00</DestTime>
+  <Importer>EffectImporter</Importer>
+  <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
+  <Processor>EffectProcessor</Processor>
+  <ProcessorTime>2018-12-08T23:35:54+07:00</ProcessorTime>
+  <Parameters>
+    <Key>DebugMode</Key>
+    <Value>Auto</Value>
+  </Parameters>
+  <Dependencies>
+    <string>C:\Users\space\Downloads\SpaceRuner-20200404T154335Z-001\SpaceRuner\Samples\SamplesContent\Effects\Macros.fxh</string>
+  </Dependencies>
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

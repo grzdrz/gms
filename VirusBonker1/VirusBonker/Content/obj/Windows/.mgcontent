@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/virus1.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/virus2.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/arrow.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/buttons.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/cursor.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/gradient.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/logo.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/popup.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/slider.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/socket.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Common/stick.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Effects/LightEffect.fx</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Materials/blank.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Materials/dots.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Materials/pavement.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Materials/squares.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Materials/waves.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/alphabet.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/car.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/goo.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/link.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/object.png</File>
+    <File>C:/Users/space/Music/VirusBonker/VirusBonker/Content/Samples/wheel.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

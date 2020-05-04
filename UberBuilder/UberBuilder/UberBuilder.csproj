@@ -119,9 +119,8 @@
     <Compile Include="ScreenSystem\Menu\MenuButton.cs" />
     <Compile Include="ScreenSystem\Menu\MenuEntry.cs" />
     <Compile Include="ScreenSystem\Menu\MenuScreen.cs" />
-    <Compile Include="ScreenSystem\MessageBoxes\NewBlockButton.cs" />
     <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
-    <Compile Include="ScreenSystem\MessageBoxes\EndGameResultScreen.cs" />
+    <Compile Include="GameSystem\MessageBoxes\EndGameResultScreen.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
     <Compile Include="ScreenSystem\SpriteFonts.cs" />
@@ -139,6 +138,9 @@
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />

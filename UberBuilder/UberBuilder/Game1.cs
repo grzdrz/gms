@@ -74,7 +74,6 @@ namespace UberBuilder
 
 
             MenuScreen menuScreen = new MenuScreen("Samples");
-
             menuScreen.AddMenuItem(simpleTest.GetTitle(), EntryType.Screen, simpleTest);
             menuScreen.AddMenuItem(gameLevel1.GetTitle(), EntryType.Screen, gameLevel1);
             menuScreen.AddMenuItem(simpleDemo1.GetTitle(), EntryType.Screen, simpleDemo1);
@@ -97,15 +96,13 @@ namespace UberBuilder
             menuScreen.AddMenuItem("", EntryType.Separator, null);
             menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
 
-            MainMenuScreen mainMenuScreen = new MainMenuScreen("MainMenu"/*, menuScreen*/);
+            MainMenuScreen mainMenuScreen = new MainMenuScreen("MainMenu");
             mainMenuScreen.AddMenuItem(EntryType.Screen, menuScreen);
             mainMenuScreen.AddMenuItem(EntryType.ExitItem, null); 
 
             ScreenManager.AddScreen(background = new BackgroundScreen());
             ScreenManager.AddScreen(mainMenuScreen);
             ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(3.0)));
-
-            //ScreenManager.AddScreen(new MessageBoxScreen(gameLevel1.GetTitle(), gameLevel1.GetDetails()));
         }
     }
 }

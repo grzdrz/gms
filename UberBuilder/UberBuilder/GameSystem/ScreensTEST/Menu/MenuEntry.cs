@@ -30,8 +30,9 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         private float _height;
         private MenuScreen _menu;
 
-        private float _scale;
+        private float _scale { get; set; }
         public float _buttonScale;
+        public float _sizeScaleInPercent;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -81,16 +82,23 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             _baseOrigin = new Vector2(font.MeasureString(Text).X, font.MeasureString("M").Y) * 0.5f;
 
             ///////TEST
-            if(_type == EntryType.Screen)
+            var viewport_height = _menu.ScreenManager.GraphicsDevice.Viewport.Height;
+            var viewport_width = _menu.ScreenManager.GraphicsDevice.Viewport.Width;
+
+            if (_type == EntryType.Screen)
+            {
+                _sizeScaleInPercent = 10f;
                 gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel"));
+            }
             else if (_type == EntryType.ExitItem)
-                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonExit"));
+            {
+                _sizeScaleInPercent = 10f;
+                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonBack"));
+            }
 
             if (gameIcon1 != null)
             {
-                var viewport_height = _menu.ScreenManager.GraphicsDevice.Viewport.Height;
-                var viewport_width = _menu.ScreenManager.GraphicsDevice.Viewport.Width;
-                var percentage = ((float)viewport_width) / 10f;//для кнопки старта игры
+                var percentage = ((float)viewport_width) / (100f / _sizeScaleInPercent);//для кнопки старта игры
                 _buttonScale = percentage / gameIcon1.Size.X;
 
                 _width = gameIcon1.Size.X * _buttonScale;
@@ -129,7 +137,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 else
                     _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
 
-                _scale = 0.7f + 0.1f * _selectionFade;
+                _scale = /*0.7*/1f + 0.1f * _selectionFade;
             }
         }
 
@@ -152,7 +160,16 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             color *= Alpha;
 
             // Draw text, centered on the middle of each line.
-            batch.DrawString(font, Text, Position - _baseOrigin * _scale + Vector2.One, Color.DarkSlateGray * Alpha * Alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+            batch.DrawString(
+                font,
+                Text,
+                Position - _baseOrigin * _scale + Vector2.One,
+                Color.DarkSlateGray * Alpha * Alpha,
+                0,
+                Vector2.Zero,
+                _scale,
+                SpriteEffects.None, 
+                0);
             batch.DrawString(font, Text, Position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
 
             ///////TEST
@@ -166,7 +183,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                     Color.White,
                     0f,
                     gameIcon1.Origin,
-                    Vector2.One/* * (1f / 24f)*/ * _buttonScale,
+                    Vector2.One/* * (1f / 24f)*/ * _buttonScale * _scale,
                     SpriteEffects.None,
                     0f);
             //////////

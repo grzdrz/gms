@@ -23,3 +23,5 @@ C:\Users\space\Music\gms\UberBuilder\UberBuilder\obj\x86\Debug\UberBuilder.cspro
 C:\Users\space\Music\gms\UberBuilder\UberBuilder\obj\x86\Debug\UberBuilder.csproj.CopyComplete
 C:\Users\space\Music\gms\UberBuilder\UberBuilder\obj\x86\Debug\UberBuilder.exe
 C:\Users\space\Music\gms\UberBuilder\UberBuilder\obj\x86\Debug\UberBuilder.pdb
+C:\Users\space\Music\gms\UberBuilder\UberBuilder\bin\Windows\x86\Debug\Newtonsoft.Json.dll
+C:\Users\space\Music\gms\UberBuilder\UberBuilder\bin\Windows\x86\Debug\Newtonsoft.Json.xml

@@ -23,6 +23,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         private float _scale;
         public float _buttonScale;
+        public float _sizeScaleInPercent;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -60,21 +61,25 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public void Initialize()
         {
+            var viewport_height = _menu.ScreenManager.GraphicsDevice.Viewport.Height;
+            var viewport_width = _menu.ScreenManager.GraphicsDevice.Viewport.Width;
             if (_type == EntryType.Screen)
-                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonPlay"));
-            else if (_type == EntryType.ExitItem)
-                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonExit"));
-
-            if (gameIcon1 != null)
             {
-                var viewport_height = _menu.ScreenManager.GraphicsDevice.Viewport.Height;
-                var viewport_width = _menu.ScreenManager.GraphicsDevice.Viewport.Width;
-                var percentage = ((float)viewport_width) / 7f;//для кнопки старта игры
+                _sizeScaleInPercent = 20f;
+                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonPlay"));
+                var percentage = ((float)viewport_width) / (100f / _sizeScaleInPercent);
                 _buttonScale = percentage / gameIcon1.Size.X;
-
-                _width = gameIcon1.Size.X * _buttonScale;
-                _height = gameIcon1.Size.Y * _buttonScale;
             }
+            else if (_type == EntryType.ExitItem)
+            {
+                _sizeScaleInPercent = 10f;
+                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonExit"));
+                var percentage = ((float)viewport_width) / (100f / _sizeScaleInPercent);
+                _buttonScale = percentage / gameIcon1.Size.X;
+            }
+
+            _width = gameIcon1.Size.X * _buttonScale;
+            _height = gameIcon1.Size.Y * _buttonScale;
         }
 
         public bool IsExitItem()
@@ -100,6 +105,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
+            //коэффициент от 0 до 1 включительно, определяющий изменение размера(в Draw()) при наведении на кнопку
             if (_type != EntryType.Separator)
             {
                 float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
@@ -108,7 +114,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 else
                     _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
 
-                _scale = 0.7f + 0.1f * _selectionFade;
+                _scale = 1f/*0.7f*/ + 0.1f * _selectionFade;
             }
         }
 
@@ -137,7 +143,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                     Color.White,
                     0f,
                     gameIcon1.Origin,
-                    Vector2.One/* * (1f / 24f)*/ * _buttonScale,
+                    Vector2.One/* * (1f / 24f)*/ * _buttonScale * _scale,
                     SpriteEffects.None,
                     0f);
         }

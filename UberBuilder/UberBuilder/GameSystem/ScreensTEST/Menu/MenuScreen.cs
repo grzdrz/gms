@@ -234,14 +234,27 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 }
                 else
                 {
-                    //position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2f;
+                    // move down for the next entry the size of this entry
+                    if (position.X >= viewport_width - borderWidthHeight)
+                    {
+                        position.X = borderWidthHeight;
+                        position.Y += (_menuEntries[i].GetHeight() + 50f);
+                        _menuEntries[i].Position = position;
+                        position.X += (_menuEntries[i].GetWidth() + 50f);
+                    }
+                    else
+                    {
+                        _menuEntries[i].Position = position;
+                        position.X += (_menuEntries[i].GetWidth() + 50f);
+                    }
+
                     if (ScreenState == ScreenState.TransitionOn)
                         position.X -= transitionOffset * 256;
                     else
                         position.X += transitionOffset * 256;
 
                     // set the entry's position
-                    _menuEntries[i].Position = position;
+                    //_menuEntries[i].Position = position;
 
                     if (position.Y < _menuBorderTop)
                         _menuEntries[i].Alpha = 1f - Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
@@ -249,17 +262,6 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                         _menuEntries[i].Alpha = 1f - Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) / _menuBorderMargin;
                     else
                         _menuEntries[i].Alpha = 1f;
-
-                    // move down for the next entry the size of this entry
-                    if (position.X >= viewport_width - borderWidthHeight)
-                    {
-                        position.X = borderWidthHeight;
-                        position.Y += (_menuEntries[i].GetHeight() + 50f);
-                    }
-                    else
-                    {
-                        position.X += (_menuEntries[i].GetWidth() + 50f);
-                    }
                 }
             }
             Vector2 scrollPos = _scrollSlider.Position;

@@ -217,15 +217,15 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             position.X = borderWidthHeight;//стартовое значение
             //(т.к. объект отрисовывается от центра, то нужно установить смещение на половину ширины вправо + ширина условной рамки,
             //где ширина кнопки == 1/10 ширины вьюпорта)
-            //position.Y = _menuBorderTop - _menuOffset;/////////////////
+            //position.Y = _menuBorderTop - _menuOffset;
 
             // update each menu entry's location in turn
             for (int i = 0; i < _menuEntries.Count; ++i)
             {
                 if (_menuEntries[i]._type == EntryType.ExitItem)
                 {
-                    position.X = viewport_width - 50f - _menuEntries[i].GetWidth() / 2f;
-                    position.Y = viewport_height - 50f - _menuEntries[i].GetHeight() / 2f;
+                    position.X = viewport_width - 30f - _menuEntries[i].GetWidth() / 2f;
+                    position.Y = viewport_height - 30f - _menuEntries[i].GetHeight() / 2f;
                 }
                 else
                 {

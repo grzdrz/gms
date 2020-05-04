@@ -22,23 +22,12 @@ using tainicom.Aether.Physics2D.Samples.DrawingSystem;
 using tainicom.Aether.Physics2D.Dynamics;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using System.Text.RegularExpressions;
 
 namespace UberBuilder.GameSystem
 {
     public class GameLevel1 : PhysicsGameScreen//, IDemoScreen
     {
-        public float _width;
-        public float _height;
-        public float _halfWidth;
-        public float _halfHeight;
-
-        public Border _border;
-
-        public List<BreakableObj1> _blocks;
-        public BreakableObj1 _targetBlock;
-
-        public BuildingSilhouette _silhouette;
-
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -70,7 +59,19 @@ namespace UberBuilder.GameSystem
 
         #endregion
 
-        NewBlockButton blockButton;
+        public string lvl { get; } = "lvl1";
+        public string pathToOriginalSilhouette { get; set; } = @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\building3.png";
+        public string pathToSilhouette { get; set; } = @"b4";
+        public float _width { get; set; }
+        public float _height { get; set; }
+        public float _halfWidth { get; set; }
+        public float _halfHeight { get; set; }
+        public Border _border { get; set; }
+        public List<BreakableObj1> _blocks { get; set; }
+        public BuildingSilhouette _silhouette { get; set; }
+        //public BreakableObj1 _targetBlock { get; set; }
+
+
         public override void LoadContent()
         {
             base.LoadContent();
@@ -99,12 +100,11 @@ namespace UberBuilder.GameSystem
                 new Vector2(0f, 0f),
                 Camera,
                 new Vector2(20f, _height),
-                "b3");
+                this.pathToSilhouette);
 
             //TEST();
         }
 
-        public bool IsFirstUpd = true;
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -179,9 +179,11 @@ namespace UberBuilder.GameSystem
             base.HandleInput(input, gameTime);
         }
 
-        Random rnd = new Random();
-        public Body bodyToThrow;
-        public BreakableObj1 tBlock = null;
+
+
+        public Random rnd = new Random();
+        public Body bodyToThrow { get; set; }
+        public BreakableObj1 tBlock { get; set; } = null;
         protected override void HandleCursor(InputHelper input)
         {
             #region "Манипуляции с блоками"
@@ -313,20 +315,20 @@ namespace UberBuilder.GameSystem
             //вывести звезды
             if (input.IsNewKeyPress(Keys.E))
             {
-                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
+                resultMessage = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
 
-                ScreenManager.AddScreen(TESTMsg);
+                ScreenManager.AddScreen(resultMessage);
             }
             #endregion
         }
-        EndGameResultScreen TESTMsg;
-        int starCount = 0;
 
 
 
-        public bool IsGameEnd = false;
-        public bool IsColorArrayProcessed = false;
-        public bool IsCameCanMove = false;
+
+        public EndGameResultScreen resultMessage { get; set; }
+        public int starCount { get; set; } = 0;
+        public bool IsGameEnd { get; set; } = false;
+        public bool IsColorArrayProcessed { get; set; } = false;
         public void ScreenOfFinalBuilding()
         {
             if (!IsColorArrayProcessed)
@@ -404,10 +406,12 @@ namespace UberBuilder.GameSystem
                     }
                 }
 
-                //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\333.png", FileMode.Create, FileAccess.ReadWrite))
-                //{
-                //    bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
-                //}
+                #region "Тестовый сейв скриншота"
+                using (FileStream fs = new FileStream(@"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\333.png", FileMode.Create, FileAccess.ReadWrite))
+                {
+                    bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                }
+                #endregion
 
                 #region "saveAsFile"
                 //System.Drawing.Bitmap bitmap2 = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
@@ -427,7 +431,7 @@ namespace UberBuilder.GameSystem
 
                 System.Drawing.Bitmap bitmapGame = new System.Drawing.Bitmap(bitmap, w1 / 5, h1 / 5);
                 System.Drawing.Bitmap bitmapSource = new System.Drawing.Bitmap(
-                    new System.Drawing.Bitmap("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\building3.png"),
+                    new System.Drawing.Bitmap(this.pathToOriginalSilhouette),
                     w1 / 5,
                     h1 / 5);
                 float coincidencesCount = 0.001f;
@@ -457,21 +461,60 @@ namespace UberBuilder.GameSystem
 
                 texture.Dispose();
 
-                TESTMsg = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
-                ScreenManager.AddScreen(TESTMsg);
+                resultMessage = new EndGameResultScreen(this.GetTitle(), this.GetDetails(), starCount);
+                ScreenManager.AddScreen(resultMessage);
+
+                #region "Сохранение результата"
+                ////////////////добавить проценты в файл
+                string resultFileContent = "";
+                string resultFileContentUpd = "";
+                using (FileStream fs = new FileStream(
+                    @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt",
+                    FileMode.OpenOrCreate,
+                    FileAccess.Read
+                    ))
+                {
+                    using (StreamReader sr = new StreamReader(fs))
+                    {
+                        resultFileContent = sr.ReadToEnd();
+                    }
+                }
+                using (FileStream fs = new FileStream(
+                    @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt",
+                    FileMode.Create,
+                    FileAccess.Write
+                    ))
+                {
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        Regex regex = new Regex(this.lvl + ":[0-5]{1}");
+                        Match match = regex.Match(resultFileContent);
+                        if (match.Success)
+                            resultFileContentUpd = regex.Replace(resultFileContent, this.lvl + ":" + starCount);
+                        else
+                            resultFileContentUpd = resultFileContent + (this.lvl + ":" + starCount + ";");
+
+                        sw.WriteLine(resultFileContentUpd);
+                    }
+                }
+                #endregion
             }
-            IsCameCanMove = true;//запуск движения камеры
         }
 
 
         public override void UnloadContent()
         {
+            ScreenManager.RemoveScreen(resultMessage);
+
             //DebugView.RemoveFlags(DebugViewFlags.Shape);
-            //ScreenManager.RemoveScreen(blockButton);
+            IsGameEnd = false;
+            IsColorArrayProcessed = false;
+            starCount = 0;
+            bodyToThrow = null;
+            tBlock = null;
 
             base.UnloadContent();
         }
-
 
         #region "TEST DOTS"
         Vector2 positionInPixels;

@@ -70,6 +70,7 @@ namespace UberBuilder.GameSystem
 
         #endregion
 
+        NewBlockButton blockButton;
         public override void LoadContent()
         {
             base.LoadContent();
@@ -103,6 +104,7 @@ namespace UberBuilder.GameSystem
             //TEST();
         }
 
+        public bool IsFirstUpd = true;
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -115,7 +117,17 @@ namespace UberBuilder.GameSystem
             _silhouette.Update();
 
 
-            if (IsGameEnd) ScreenOfFinalBuilding();
+            if (IsGameEnd)
+            {
+                ScreenOfFinalBuilding();
+            }
+
+            //if (IsFirstUpd)
+            //{
+            //    IsFirstUpd = false;
+            //    blockButton = new NewBlockButton();
+            //    ScreenManager.AddScreen(blockButton);
+            //}
         }
 
         public override void Draw(GameTime gameTime)
@@ -137,9 +149,6 @@ namespace UberBuilder.GameSystem
             if(!IsGameEnd)_border.Draw();
             base.Draw(gameTime);
         }
-
-
-
 
 
 
@@ -179,7 +188,7 @@ namespace UberBuilder.GameSystem
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);//пиксели -> местные координаты???
 
             //захватить блок
-            if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
+            if ((/*input.IsNewButtonPress(Buttons.A) || */input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
             {
                 tBlock = null;
                 Fixture savedFixture = World.TestPoint(position);
@@ -203,7 +212,7 @@ namespace UberBuilder.GameSystem
             }
 
             //перетаскивать блок
-            if ((input.IsNewButtonRelease(Buttons.A) || input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) && _fixedMouseJoint != null)
+            if ((/*input.IsNewButtonRelease(Buttons.A) || */input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) && _fixedMouseJoint != null)
             {
                 if (bodyToThrow == tBlock.body)
                 {
@@ -289,19 +298,6 @@ namespace UberBuilder.GameSystem
                     50f));
                 _blocks.Last()._blockState = BlockState.Created;
             }
-            //if (input.IsNewKeyPress(Keys.R))
-            //{
-            //    _blocks.Add(new WoodBlock(
-            //        World,
-            //        ScreenManager,
-            //         new Vector2(-15f, -10f),
-            //        Camera,
-            //        "wood-plank33",
-            //        TriangulationAlgorithm.Bayazit,
-            //        new Vector2((float)(rnd.Next(1, 6)) / 10f, 0.04f),
-            //        50f));
-            //    _blocks.Last()._blockState = BlockState.Created;
-            //}
 
             if (_fixedMouseJoint != null)
                 _fixedMouseJoint.WorldAnchorB = position;
@@ -331,61 +327,55 @@ namespace UberBuilder.GameSystem
         public bool IsGameEnd = false;
         public bool IsColorArrayProcessed = false;
         public bool IsCameCanMove = false;
-        public /*async */void ScreenOfFinalBuilding()
+        public void ScreenOfFinalBuilding()
         {
             if (!IsColorArrayProcessed)
             {
-                //await Task.Run(() =>
-                //{
                     IsColorArrayProcessed = true;
 
-                    #region "save texture segment to png file"
-                    int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
-                    int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
+                int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
-                    //pull the picture from the buffer 
-                    int[] backBuffer = new int[w * h];
-                    ScreenManager.GraphicsDevice.GetBackBufferData(backBuffer);
+                //pull the picture from the buffer 
+                int[] backBuffer = new int[w * h];
+                ScreenManager.GraphicsDevice.GetBackBufferData(backBuffer);
 
-                    //copy into a texture 
-                    Texture2D texture = new Texture2D(
-                        ScreenManager.GraphicsDevice,
-                        w, h,
-                        false,
-                        ScreenManager.GraphicsDevice.PresentationParameters.BackBufferFormat);
-                    texture.SetData(backBuffer);
+                //copy into a texture 
+                Texture2D texture = new Texture2D(
+                    ScreenManager.GraphicsDevice,
+                    w, h,
+                    false,
+                    ScreenManager.GraphicsDevice.PresentationParameters.BackBufferFormat);
+                texture.SetData(backBuffer);
 
-                    int w1 = (int)((_silhouette._sprite.Size.X) / _silhouette.scaleKoef.X);
-                    int h1 = (int)((_silhouette._sprite.Size.Y) / _silhouette.scaleKoef.Y);
-                    Vector2 positionInPixels = (_silhouette._body.Position + new Vector2(this._halfWidth, this._halfHeight)) * 24f;
-                    Vector2 rectBorderOfObjCoords = new Vector2();
-                    rectBorderOfObjCoords.X = positionInPixels.X - (w1 / 2f);
-                    rectBorderOfObjCoords.Y = positionInPixels.Y + (h1 / 2f);
-                    Color[] colors = new Color[w1 * h1];
-                    texture.GetData<Color>(
-                        0,
-                        new Rectangle(
-                            (int)(rectBorderOfObjCoords.X + 0.7f * (24f)), //0.7f * (24f) - ширина бордюра в пикселях
-                            (int)(0.7f * (24f)),
-                            w1,
-                            h1),
-                        colors,
-                        0,
-                        w1 * h1);
+                int w1 = (int)((_silhouette._sprite.Size.X) / _silhouette.scaleKoef.X);
+                int h1 = (int)((_silhouette._sprite.Size.Y) / _silhouette.scaleKoef.Y);
+                Vector2 positionInPixels = (_silhouette._body.Position + new Vector2(this._halfWidth, this._halfHeight)) * 24f;
+                Vector2 rectBorderOfObjCoords = new Vector2();
+                rectBorderOfObjCoords.X = positionInPixels.X - (w1 / 2f);
+                rectBorderOfObjCoords.Y = positionInPixels.Y + (h1 / 2f);
+                Color[] colors = new Color[w1 * h1];
+                texture.GetData<Color>(
+                    0,
+                    new Rectangle(
+                        (int)(rectBorderOfObjCoords.X + 0.7f * (24f)), //0.7f * (24f) - ширина бордюра в пикселях
+                        (int)(0.7f * (24f)),
+                        w1,
+                        h1),
+                    colors,
+                    0,
+                    w1 * h1);
 
 
-                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(w1, h1);
-                    Color[,] rawDataAsGrid = new Color[h1, w1];
-                    for (int row = 0; row < h1; row++)
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(w1, h1);
+                Color[,] rawDataAsGrid = new Color[h1, w1];
+                for (int row = 0; row < h1; row++)
+                {
+                    for (int column = 0; column < w1; column++)
                     {
-                        for (int column = 0; column < w1; column++)
-                        {
-                            // Assumes row major ordering of the array.
-                            rawDataAsGrid[row, column] = colors[row * w1 + column];
+                        // Assumes row major ordering of the array.
+                        rawDataAsGrid[row, column] = colors[row * w1 + column];
 
-                        //if (rawDataAsGrid[row, column].R >= 40 && rawDataAsGrid[row, column].R <= 70 &&
-                        //    rawDataAsGrid[row, column].G >= 80 && rawDataAsGrid[row, column].G <= 110 &&
-                        //    rawDataAsGrid[row, column].B >= 100 && rawDataAsGrid[row, column].B <= 135)
                         if (rawDataAsGrid[row, column].R == 61 &&
                             rawDataAsGrid[row, column].G == 96 &&
                             rawDataAsGrid[row, column].B == 119) //61 96 119
@@ -412,7 +402,7 @@ namespace UberBuilder.GameSystem
                         //    rawDataAsGrid[row, column].G,
                         //    rawDataAsGrid[row, column].B));
                     }
-                    }
+                }
 
                 //using (FileStream fs = new FileStream("C:\\Users\\space\\Рабочий стол\\TESTTESTTESTASSGDF\\333.png", FileMode.Create, FileAccess.ReadWrite))
                 //{
@@ -471,13 +461,13 @@ namespace UberBuilder.GameSystem
                 ScreenManager.AddScreen(TESTMsg);
             }
             IsCameCanMove = true;//запуск движения камеры
-            #endregion
         }
 
 
         public override void UnloadContent()
         {
             //DebugView.RemoveFlags(DebugViewFlags.Shape);
+            //ScreenManager.RemoveScreen(blockButton);
 
             base.UnloadContent();
         }
@@ -522,12 +512,6 @@ namespace UberBuilder.GameSystem
                 0f);
         }
         #endregion
-    }
-
-    public enum IsMouseLeftButtonPressed
-    {
-        Yes,
-        No
     }
 }
 

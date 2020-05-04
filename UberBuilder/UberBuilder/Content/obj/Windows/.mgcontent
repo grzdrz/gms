@@ -20,6 +20,11 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b3.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/b4.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/bootilka1.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonBack.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonExit.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonPlay.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonRestart.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/goldenStar1.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/vilka.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank3.png</File>
@@ -37,6 +42,11 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/wheel.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

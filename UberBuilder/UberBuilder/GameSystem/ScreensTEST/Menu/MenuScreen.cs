@@ -94,6 +94,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         /// <summary>
         /// Returns the index of the menu entry at the position of the given mouse state.
+        /// Возвращает индекс объекта, в зоне которого находится курсор.
         /// </summary>
         /// <returns>Index of menu entry if valid, -1 otherwise</returns>
         private int GetMenuEntryAt(Vector2 position)
@@ -141,24 +142,31 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             }
 
             // Accept or cancel the menu? 
+            //добавление скрина в игровой процесс при нажатии кнопки ЛКМ/пробела/энтера/...
             if (input.IsMenuSelect() && _selectedEntry != -1)
             {
                 if (_menuEntries[_selectedEntry].IsExitItem())
-                    ScreenManager.Game.Exit();
+                {
+                    //ScreenManager.Game.Exit();
+                    ExitScreen();
+                }
                 else if (_menuEntries[_selectedEntry].Screen != null)
                 {
                     ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
 
                     if (_menuEntries[_selectedEntry].Screen is IDemoScreen)
                     {
-                        var demoScreen = _menuEntries[_selectedEntry].Screen as IDemoScreen;
+                        var demoScreen = _menuEntries[_selectedEntry].Screen as IDemoScreen;//добавление доп. сообщения перед стартом игры
                         ScreenManager.AddScreen(new MessageBoxScreen(demoScreen.GetTitle(), demoScreen.GetDetails()));
                     }
                 }
             }
             else if (input.IsMenuCancel())
-                ScreenManager.Game.Exit();
-
+            {
+                //ScreenManager.Game.Exit();
+                ExitScreen();
+            }
+            //вход в игру через нажатие ЛКМ/пробела/энтера/...
             if (input.IsMenuPressed())
             {
                 if (_scrollUp.Hover)
@@ -177,12 +185,13 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 }
             }
 
+
+
             if (input.WheelDelta != 0)
             {
                 _menuOffset = MathHelper.Clamp(_menuOffset - 32f * (input.WheelDelta / 120f), 0f, _maxOffset);
                 _scrollLock = false;
             }
-
 
             if (input.IsMenuReleased())
                 _scrollLock = false;

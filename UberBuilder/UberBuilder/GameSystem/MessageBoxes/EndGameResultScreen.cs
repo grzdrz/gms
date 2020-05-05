@@ -18,10 +18,10 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
     {
         private Rectangle _backgroundRectangle;
         private Texture2D _gradientTexture;
-        private string _title;
-        private string _message;
-        Vector2 _titleSize;
-        private Vector2 _textPosition;
+        //private string _title;
+        //private string _message;
+        //Vector2 _titleSize;
+        //private Vector2 _textPosition;
 
         public Vector2 _messageWindowSize;
 
@@ -34,8 +34,8 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public EndGameResultScreen(string title, string message, int starCount)
         {
-            _title = title;
-            _message = message;
+            //_title = title;
+            //_message = message;
             _starCount = starCount;
 
             IsPopup = true;
@@ -53,7 +53,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            SpriteFont font = ScreenManager.Fonts.DetailsFont;
+            //SpriteFont font = ScreenManager.Fonts.DetailsFont;
             ContentManager content = ScreenManager.Game.Content;
             _gradientTexture = content.Load<Texture2D>("Common/popup");
             _star = content.Load<Texture2D>("goldenStar1");
@@ -61,21 +61,20 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             // Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            _titleSize = font.MeasureString(_title);
-            _titleSize.Y *= 2f;
-            Vector2 textSize = font.MeasureString(_message);
-            textSize.X = (float)Math.Max(_titleSize.X, textSize.X);
-            textSize.Y = _titleSize.Y + textSize.Y;
+            //_titleSize = font.MeasureString(_title);
+            //_titleSize.Y *= 2f;
+            //Vector2 textSize = font.MeasureString(_message);
+            //textSize.X = (float)Math.Max(_titleSize.X, textSize.X);
+            //textSize.Y = _titleSize.Y + textSize.Y;
 
-            // The background includes a border somewhat larger than the text itself.
-            const int hPad = 32;
-            const int vPad = 64;
+            //// The background includes a border somewhat larger than the text itself.
+            //const int hPad = 32;
+            //const int vPad = 64;
 
-            var panelSize = new Vector2(
-                textSize.X + hPad * 2f,
-                textSize.Y + vPad * 2f
-                );
-
+            //var panelSize = new Vector2(
+            //    textSize.X + hPad * 2f,
+            //    textSize.Y + vPad * 2f
+            //    );
 
             float bWidth = 0;
             if (viewportSize.X > viewportSize.Y)
@@ -95,8 +94,18 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                         ));
             }
 
-            _textPosition.X = _backgroundRectangle.X + hPad;
-            _textPosition.Y = 0 + vPad;
+
+            int backgroundReactangleWidth = (int)(_starSize.X * 5f + _starSize.X * 2.5f);
+            int backgroundReactangleHeight = (int)(_starSize.Y * 1f + _starSize.Y * 2.5f);
+            _backgroundRectangle = new Rectangle(
+                (int)(viewportSize.X / 2f - backgroundReactangleWidth / 2f),
+                (int)(viewportSize.Y / 2f - backgroundReactangleHeight / 2f),
+                backgroundReactangleWidth,
+                backgroundReactangleHeight);
+
+
+            //_textPosition.X = _backgroundRectangle.X + hPad;
+            //_textPosition.Y = 0 + vPad;
         }
 
         /// <summary>
@@ -133,6 +142,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             // Draw the background rectangle.
             //spriteBatch.Draw(_gradientTexture, backgroundRectangle, bgColor);
 
+            spriteBatch.Draw(_gradientTexture, _backgroundRectangle, Color.White * TransitionAlpha);
             for (int i = 0; i < _starCount; i++)
                 spriteBatch.Draw(_star, _backgroundRectangleStars[i], Color.White * TransitionAlpha);
             

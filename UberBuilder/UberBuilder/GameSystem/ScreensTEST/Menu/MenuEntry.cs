@@ -88,7 +88,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             if (_type == EntryType.Screen)
             {
                 _sizeScaleInPercent = 10f;
-                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel"));
+                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_4stars"));
             }
             else if (_type == EntryType.ExitItem)
             {

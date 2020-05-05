@@ -156,6 +156,12 @@
     <Content Include="Content\gameObjs\buttonBack.png" />
     <Content Include="Content\gameObjs\buttonExit.png" />
     <Content Include="Content\gameObjs\buttonGLevel.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_0stars.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_1stars.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_2stars.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_3stars.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_4stars.png" />
+    <Content Include="Content\gameObjs\buttonGLevel4_5stars.png" />
     <Content Include="Content\gameObjs\buttonPlay.png" />
     <Content Include="Content\gameObjs\buttonRestart.png" />
     <Content Include="Content\gameObjs\vilka.png" />

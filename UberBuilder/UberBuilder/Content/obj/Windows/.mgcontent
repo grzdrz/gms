@@ -23,6 +23,12 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonBack.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonExit.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_0stars.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_1stars.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_2stars.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_3stars.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_4stars.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonGLevel4_5stars.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonPlay.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonRestart.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/goldenStar1.png</File>
@@ -42,6 +48,12 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/wheel.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

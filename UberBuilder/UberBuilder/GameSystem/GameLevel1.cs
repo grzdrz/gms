@@ -453,11 +453,13 @@ namespace UberBuilder.GameSystem
                 }
 
                 float result = coincidencesCount / countOfBlackPixelsInSource;
-                if (result > 0.8f) starCount = 5;
-                else if (result > 0.6f && result <= 0.8f) starCount = 4;
-                else if (result > 0.4f && result <= 0.6f) starCount = 3;
-                else if (result > 0.2f && result <= 0.4f) starCount = 2;
-                else starCount = 1;
+                result = (float)Math.Round((double)result, 2);
+                if (result > 0.85f) starCount = 5;
+                else if (result > 0.7f && result <= 0.85f) starCount = 4;
+                else if (result > 0.5f && result <= 0.7f) starCount = 3;
+                else if (result > 0.3f && result <= 0.5f) starCount = 2;
+                else if (result > 0.1f && result <= 0.3f) starCount = 1;
+                else starCount = 0;
 
                 texture.Dispose();
 
@@ -469,7 +471,7 @@ namespace UberBuilder.GameSystem
                 string resultFileContent = "";
                 string resultFileContentUpd = "";
                 using (FileStream fs = new FileStream(
-                    @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt",
+                    Game1.SavePath,
                     FileMode.OpenOrCreate,
                     FileAccess.Read
                     ))
@@ -480,19 +482,19 @@ namespace UberBuilder.GameSystem
                     }
                 }
                 using (FileStream fs = new FileStream(
-                    @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt",
+                    Game1.SavePath,
                     FileMode.Create,
                     FileAccess.Write
                     ))
                 {
                     using (StreamWriter sw = new StreamWriter(fs))
                     {
-                        Regex regex = new Regex(this.lvl + ":[0-5]{1}");
+                        Regex regex = new Regex(this.lvl + ":[0-5]{1}?[0-9]{1,3};");
                         Match match = regex.Match(resultFileContent);
                         if (match.Success)
-                            resultFileContentUpd = regex.Replace(resultFileContent, this.lvl + ":" + starCount);
+                            resultFileContentUpd = regex.Replace(resultFileContent, this.lvl + ":" + starCount + "?" + result * 100f + ";");
                         else
-                            resultFileContentUpd = resultFileContent + (this.lvl + ":" + starCount + ";");
+                            resultFileContentUpd = resultFileContent + (this.lvl + ":" + starCount + "?" + result * 100f + ";");
 
                         sw.WriteLine(resultFileContentUpd);
                     }

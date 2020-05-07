@@ -67,7 +67,8 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             string texturePath, 
             TriangulationAlgorithm triangulationAlgorithm,
             Vector2 scale,
-            float strength)
+            float strength,
+            float massKoef)
         {
             _world = world;
             _screenManager = screenManager;
@@ -98,7 +99,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
                 triangulated = Triangulate.ConvexPartition(polygon, triangulationAlgorithm);
 
-                Vector2 vertScale = (new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height)) * scale/*0.5f*/;
+                Vector2 vertScale = new Vector2(0.01f, 0.01f)/*(new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height)) * scale*//*0.5f*/;
                 foreach (Vertices vertices in triangulated)
                     vertices.Scale(ref vertScale);
             }
@@ -106,7 +107,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _breakableBody.MainBody.Position = position;
             //_breakableBody.MainBody.Mass = 5f;
             _breakableBody.MainBody.SetFriction(_breakableBody.MainBody.Mass * 50f);
-            _breakableBody.Strength = /*50*/strength;
+            _breakableBody.Strength = /*50*/strength * massKoef;
             #endregion
 
 

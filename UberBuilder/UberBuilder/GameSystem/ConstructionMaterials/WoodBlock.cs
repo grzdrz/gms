@@ -12,8 +12,26 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
 {
     public class WoodBlock : BreakableObj1
     {
-        public WoodBlock(World world, ScreenManager screenManager, Vector2 position, Camera2D camera, string texturePath, TriangulationAlgorithm triangulationAlgorithm, Vector2 scale, float strength)
-            : base(world, screenManager, position, camera, texturePath, triangulationAlgorithm, scale, strength)
+        public WoodBlock(
+            World world, 
+            ScreenManager screenManager,
+            Vector2 position,
+            Camera2D camera, 
+            string texturePath,
+            TriangulationAlgorithm triangulationAlgorithm, 
+            Vector2 scale,
+            float strength,
+            float massKoef)
+            : base(
+                  world,
+                  screenManager,
+                  position,
+                  camera,
+                  texturePath,
+                  triangulationAlgorithm, 
+                  scale,
+                  strength,
+                  massKoef)
         {
 
         }

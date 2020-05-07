@@ -23,6 +23,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System.Text.RegularExpressions;
+using UberBuilder.GameSystem.MessageBoxes;
 
 namespace UberBuilder.GameSystem
 {
@@ -72,6 +73,7 @@ namespace UberBuilder.GameSystem
         //public BreakableObj1 _targetBlock { get; set; }
 
 
+        public RestartButton restartButton { get; set; }
         public override void LoadContent()
         {
             base.LoadContent();
@@ -103,6 +105,9 @@ namespace UberBuilder.GameSystem
                 this.pathToSilhouette);
 
             //TEST();
+
+            restartButton = new RestartButton(this, ScreenManager);
+            restartButton.AddMenuItem(EntryType.Screen, this);
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
@@ -122,12 +127,7 @@ namespace UberBuilder.GameSystem
                 ScreenOfFinalBuilding();
             }
 
-            //if (IsFirstUpd)
-            //{
-            //    IsFirstUpd = false;
-            //    blockButton = new NewBlockButton();
-            //    ScreenManager.AddScreen(blockButton);
-            //}
+            restartButton.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
@@ -142,11 +142,18 @@ namespace UberBuilder.GameSystem
                 b.Draw();
             }
 
-            //TESTDraw();
-
             ScreenManager.SpriteBatch.End();
 
-            if(!IsGameEnd)_border.Draw();
+            if (!IsGameEnd)
+                _border.Draw();
+            else
+            {
+                HasCursor = false;
+            }
+
+            restartButton.Draw(gameTime);
+
+
             base.Draw(gameTime);
         }
 
@@ -175,6 +182,8 @@ namespace UberBuilder.GameSystem
             //    }, ref aabb);
             //}
             #endregion
+
+            restartButton.HandleInput(input, gameTime);
 
             base.HandleInput(input, gameTime);
         }
@@ -272,32 +281,51 @@ namespace UberBuilder.GameSystem
             {
                 string blockPath = "";
                 Vector2 sizeScale = default;
-                var blockNum = rnd.Next(1, 4);
-                if (blockNum == 1)
+                float massKoef = 100f;
+                var blockNum = rnd.Next(1, 100);
+                if (blockNum <= 99 && blockNum > 70)
                 {
-                    blockPath = "wood-plank3";
-                    sizeScale = new Vector2((float)(rnd.Next(2, 7)) / 10f, 0.04f);
+                    blockPath = "gameObjs\\wood-plank";
+                    sizeScale = new Vector2(0.4f, 0.05f);
                 }
-                else if (blockNum == 2)
+                else if (blockNum <= 70 && blockNum > 55)
                 {
-                    blockPath = "wood-plank33";
-                    sizeScale = new Vector2((float)(rnd.Next(2, 7)) / 10f, 0.04f);
+                    blockPath = "gameObjs\\wood-circle";
+                    var tempRnd = (float)(rnd.Next(2, 3));
+                    sizeScale = new Vector2(0.4f, 0.25f);
+                }
+                else if (blockNum <= 55 && blockNum > 40)
+                {
+                    blockPath = "gameObjs\\wood-corner";
+                    sizeScale = new Vector2(0.4f, 0.1f);
+                }
+                else if (blockNum <= 40 && blockNum > 25)
+                {
+                    blockPath = "gameObjs\\wood-corner2";
+                    sizeScale = new Vector2(0.4f, 0.1f);
+                }
+                else if (blockNum <= 25 && blockNum > 10)
+                {
+                    blockPath = "gameObjs\\wood-halfPlank";
+                    sizeScale = new Vector2(0.4f, 0.05f);
                 }
                 else
                 {
-                    blockPath = "bootilka1";
+                    blockPath = "gameObjs\\bootilka1";
                     sizeScale = new Vector2(0.1f, 0.3f);
+                    massKoef = 1f;
                 }
 
                 _blocks.Add(new WoodBlock(
                     World,
                     ScreenManager,
-                    new Vector2(-15f, -10f),
+                    new Vector2(-15f, -5f),
                     Camera,
                     blockPath,
                     TriangulationAlgorithm.Bayazit,
                     sizeScale,
-                    50f));
+                    50f,
+                    massKoef));
                 _blocks.Last()._blockState = BlockState.Created;
             }
 
@@ -305,11 +333,11 @@ namespace UberBuilder.GameSystem
                 _fixedMouseJoint.WorldAnchorB = position;
             #endregion
 
-            #region "Смещение камеры к силуэту, его снимок и обработка"
+            #region "Снимок и обработка"
             if (input.IsNewKeyPress(Keys.Q))
             {
-                IsGameEnd = true;
                 HasCursor = false;
+                IsGameEnd = true;
             }
 
             //вывести звезды
@@ -333,7 +361,16 @@ namespace UberBuilder.GameSystem
         {
             if (!IsColorArrayProcessed)
             {
-                    IsColorArrayProcessed = true;
+                IsColorArrayProcessed = true;
+
+                TimeSpan testTimer = new TimeSpan();
+                DateTime curTime = DateTime.Now;
+                DateTime oldTime = DateTime.Now;
+                while (testTimer.TotalMilliseconds < 1000)
+                {
+                    curTime = DateTime.Now;
+                    testTimer = curTime - oldTime;
+                }
 
                 int w = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth;
                 int h = ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight;
@@ -378,9 +415,12 @@ namespace UberBuilder.GameSystem
                         // Assumes row major ordering of the array.
                         rawDataAsGrid[row, column] = colors[row * w1 + column];
 
-                        if (rawDataAsGrid[row, column].R == 61 &&
+                        if ((rawDataAsGrid[row, column].R == 61 &&
                             rawDataAsGrid[row, column].G == 96 &&
-                            rawDataAsGrid[row, column].B == 119) //61 96 119
+                            rawDataAsGrid[row, column].B == 119) ||
+                            (rawDataAsGrid[row, column].R == 31 &&
+                            rawDataAsGrid[row, column].G == 48 &&
+                            rawDataAsGrid[row, column].B == 60)) //61 96 119
                         {
                             bitmap.SetPixel(
                             column,
@@ -407,7 +447,7 @@ namespace UberBuilder.GameSystem
                 }
 
                 #region "Тестовый сейв скриншота"
-                using (FileStream fs = new FileStream(@"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\333.png", FileMode.Create, FileAccess.ReadWrite))
+                using (FileStream fs = new FileStream(@"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\3333.png", FileMode.Create, FileAccess.ReadWrite))
                 {
                     bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
                 }
@@ -454,10 +494,10 @@ namespace UberBuilder.GameSystem
 
                 float result = coincidencesCount / countOfBlackPixelsInSource;
                 result = (float)Math.Round((double)result, 2);
-                if (result > 0.85f) starCount = 5;
-                else if (result > 0.7f && result <= 0.85f) starCount = 4;
-                else if (result > 0.5f && result <= 0.7f) starCount = 3;
-                else if (result > 0.3f && result <= 0.5f) starCount = 2;
+                if (result > 0.8f) starCount = 5;
+                else if (result > 0.6f && result <= 0.8f) starCount = 4;
+                else if (result > 0.4f && result <= 0.6f) starCount = 3;
+                else if (result > 0.3f && result <= 0.4f) starCount = 2;
                 else if (result > 0.1f && result <= 0.3f) starCount = 1;
                 else starCount = 0;
 
@@ -489,7 +529,7 @@ namespace UberBuilder.GameSystem
                 {
                     using (StreamWriter sw = new StreamWriter(fs))
                     {
-                        Regex regex = new Regex(this.lvl + ":[0-5]{1}?[0-9]{1,3};");
+                        Regex regex = new Regex(this.lvl + ":\\d{1}\\?\\d{1,3};");
                         Match match = regex.Match(resultFileContent);
                         if (match.Success)
                             resultFileContentUpd = regex.Replace(resultFileContent, this.lvl + ":" + starCount + "?" + result * 100f + ";");
@@ -506,7 +546,7 @@ namespace UberBuilder.GameSystem
 
         public override void UnloadContent()
         {
-            ScreenManager.RemoveScreen(resultMessage);
+            if(resultMessage != null) ScreenManager.RemoveScreen(resultMessage);
 
             //DebugView.RemoveFlags(DebugViewFlags.Shape);
             IsGameEnd = false;
@@ -514,6 +554,7 @@ namespace UberBuilder.GameSystem
             starCount = 0;
             bodyToThrow = null;
             tBlock = null;
+
 
             base.UnloadContent();
         }

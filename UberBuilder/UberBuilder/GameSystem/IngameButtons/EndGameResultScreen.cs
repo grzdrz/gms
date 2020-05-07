@@ -38,8 +38,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             //_message = message;
             _starCount = starCount;
 
-            IsPopup = true;
-            HasCursor = true;
+            IsPopup = true;//указывает что данный скрин должен отрисовываться ПОВЕРХ, а не ВМЕСТО предыдущего скрина
 
             TransitionOnTime = TimeSpan.FromSeconds(0.35);
             TransitionOffTime = TimeSpan.FromSeconds(0.3);

@@ -33,8 +33,11 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/buttonRestart.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/goldenStar1.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/vilka.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank3.png</File>
-    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank33.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-circle.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-corner.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-corner2.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-halfPlank.png</File>
+    <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/gameObjs/wood-plank.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/blank.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/dots.png</File>
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Materials/pavement.png</File>
@@ -48,6 +51,9 @@
     <File>C:/Users/space/Music/gms/UberBuilder/UberBuilder/Content/Samples/wheel.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

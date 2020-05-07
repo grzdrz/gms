@@ -72,8 +72,10 @@
     <Compile Include="DrawingSystem\ShadowMap2D.cs" />
     <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameSystem\IngameButtons\RestartButton.cs" />
     <Compile Include="GameSystem\ScreensTEST\GameScreen.cs" />
     <Compile Include="GameSystem\ScreensTEST\InputHelper.cs" />
+    <Compile Include="GameSystem\ScreensTEST\Menu\SessionMenuEntry.cs" />
     <Compile Include="GameSystem\ScreensTEST\Menu\MenuButton.cs" />
     <Compile Include="GameSystem\ScreensTEST\Menu\MainMenuEntry.cs" />
     <Compile Include="GameSystem\ScreensTEST\Menu\MenuEntry.cs" />
@@ -120,7 +122,7 @@
     <Compile Include="ScreenSystem\Menu\MenuEntry.cs" />
     <Compile Include="ScreenSystem\Menu\MenuScreen.cs" />
     <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
-    <Compile Include="GameSystem\MessageBoxes\EndGameResultScreen.cs" />
+    <Compile Include="GameSystem\IngameButtons\EndGameResultScreen.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
     <Compile Include="ScreenSystem\SpriteFonts.cs" />
@@ -165,7 +167,11 @@
     <Content Include="Content\gameObjs\buttonPlay.png" />
     <Content Include="Content\gameObjs\buttonRestart.png" />
     <Content Include="Content\gameObjs\vilka.png" />
-    <Content Include="Content\gameObjs\wood-plank3.png" />
+    <Content Include="Content\gameObjs\wood-circle.png" />
+    <Content Include="Content\gameObjs\wood-corner.png" />
+    <Content Include="Content\gameObjs\wood-corner2.png" />
+    <Content Include="Content\gameObjs\wood-halfPlank.png" />
+    <Content Include="Content\gameObjs\wood-plank.png" />
     <Content Include="Content\gameObjs\goldenStar1.png" />
     <Content Include="Content\Common\arrow.png" />
     <Content Include="Content\Common\buttons.png" />
@@ -177,7 +183,6 @@
     <Content Include="Content\Common\socket.png" />
     <Content Include="Content\Common\stick.png" />
     <Content Include="Content\Effects\LightEffect.fx" />
-    <Content Include="Content\gameObjs\wood-plank33.png" />
     <Content Include="Content\Materials\blank.png" />
     <Content Include="Content\Materials\dots.png" />
     <Content Include="Content\Materials\pavement.png" />

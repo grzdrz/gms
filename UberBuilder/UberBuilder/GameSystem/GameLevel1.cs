@@ -280,39 +280,40 @@ namespace UberBuilder.GameSystem
             if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
             {
                 string blockPath = "";
-                Vector2 sizeScale = default;
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
                 float massKoef = 100f;
                 var blockNum = rnd.Next(1, 100);
                 if (blockNum <= 99 && blockNum > 70)
                 {
                     blockPath = "gameObjs\\wood-plank";
-                    sizeScale = new Vector2(0.4f, 0.05f);
+                    var tempRnd = (float)(rnd.Next(1, 5));
+                    sizeScale *= new Vector2(tempRnd, 1f);
                 }
                 else if (blockNum <= 70 && blockNum > 55)
                 {
                     blockPath = "gameObjs\\wood-circle";
-                    var tempRnd = (float)(rnd.Next(2, 3));
-                    sizeScale = new Vector2(0.4f, 0.25f);
+                    //var tempRnd = (float)(rnd.Next(2, 3));
+                    //sizeScale = new Vector2(0.4f, 0.25f);
                 }
                 else if (blockNum <= 55 && blockNum > 40)
                 {
                     blockPath = "gameObjs\\wood-corner";
-                    sizeScale = new Vector2(0.4f, 0.1f);
+                    //sizeScale = new Vector2(0.4f, 0.1f);
                 }
                 else if (blockNum <= 40 && blockNum > 25)
                 {
                     blockPath = "gameObjs\\wood-corner2";
-                    sizeScale = new Vector2(0.4f, 0.1f);
+                    //sizeScale = new Vector2(0.4f, 0.1f);
                 }
                 else if (blockNum <= 25 && blockNum > 10)
                 {
                     blockPath = "gameObjs\\wood-halfPlank";
-                    sizeScale = new Vector2(0.4f, 0.05f);
+                    //sizeScale = new Vector2(0.4f, 0.05f);
                 }
                 else
                 {
                     blockPath = "gameObjs\\bootilka1";
-                    sizeScale = new Vector2(0.1f, 0.3f);
+                    //sizeScale = new Vector2(0.1f, 0.3f);
                     massKoef = 1f;
                 }
 
@@ -507,7 +508,6 @@ namespace UberBuilder.GameSystem
                 ScreenManager.AddScreen(resultMessage);
 
                 #region "Сохранение результата"
-                ////////////////добавить проценты в файл
                 string resultFileContent = "";
                 string resultFileContentUpd = "";
                 using (FileStream fs = new FileStream(
@@ -529,13 +529,14 @@ namespace UberBuilder.GameSystem
                 {
                     using (StreamWriter sw = new StreamWriter(fs))
                     {
-                        Regex regex = new Regex(this.lvl + ":\\d{1}\\?\\d{1,3};");
+                        Regex regex = new Regex(this.lvl + ":\\d{1,3}\\?\\d{1,3};");
                         Match match = regex.Match(resultFileContent);
                         if (match.Success)
                             resultFileContentUpd = regex.Replace(resultFileContent, this.lvl + ":" + starCount + "?" + result * 100f + ";");
                         else
                             resultFileContentUpd = resultFileContent + (this.lvl + ":" + starCount + "?" + result * 100f + ";");
 
+                        Game1.PlayerGamesInfo = resultFileContentUpd;
                         sw.WriteLine(resultFileContentUpd);
                     }
                 }

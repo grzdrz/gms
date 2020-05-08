@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using UberBuilder;
 
 namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 {
@@ -50,12 +52,13 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             HasCursor = true;
         }
 
-        public void AddMenuItem(string name, EntryType type, GameScreen screen)
+        public void AddMenuItem(string name, EntryType type, GameScreen screen, string lvl)
         {
-            MenuEntry entry = new MenuEntry(this, name, type, screen);
+            MenuEntry entry = new MenuEntry(this, name, type, screen, lvl);
             _menuEntries.Add(entry);
         }
 
+        public string playerGamesInfo { get; set; }
         public override void LoadContent()
         {
             base.LoadContent();

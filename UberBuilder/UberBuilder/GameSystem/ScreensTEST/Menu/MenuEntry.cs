@@ -4,9 +4,11 @@
  */
 
 using System;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using tainicom.Aether.Physics2D.Samples.DrawingSystem;
+using UberBuilder;
 
 namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 {
@@ -44,13 +46,11 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public EntryType _type;
         private float _width;
-
+        public string _lvl { get; set; }
 
         Sprite gameIcon1;///////TEST
-        /// <summary>
-        /// Constructs a new menu entry with the specified text.
-        /// </summary>
-        public MenuEntry(MenuScreen menu, string text, EntryType type, GameScreen screen)
+
+        public MenuEntry(MenuScreen menu, string text, EntryType type, GameScreen screen, string lvl)
         {
             Text = text;
             Screen = screen;
@@ -58,6 +58,9 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             _menu = menu;
             _scale = 0.9f;
             Alpha = 1.0f;
+
+            _lvl = lvl;
+            lastPlayerGameInfo = Game1.PlayerGamesInfo;
         }
 
 
@@ -75,6 +78,8 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public GameScreen Screen { get; private set; }
 
+        public string lastPlayerGameInfo { get; set; }
+
         public void Initialize()
         {
             SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
@@ -85,15 +90,15 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             var viewport_height = _menu.ScreenManager.GraphicsDevice.Viewport.Height;
             var viewport_width = _menu.ScreenManager.GraphicsDevice.Viewport.Width;
 
-            if (_type == EntryType.Screen)
-            {
-                _sizeScaleInPercent = 10f;
-                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_4stars"));
-            }
-            else if (_type == EntryType.ExitItem)
+
+            if (_type == EntryType.ExitItem)
             {
                 _sizeScaleInPercent = 10f;
                 gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonBack"));
+            }
+            else if (_type == EntryType.Screen)
+            {
+                UpdateLvlsIcon();
             }
 
             if (gameIcon1 != null)
@@ -103,6 +108,50 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
                 _width = gameIcon1.Size.X * _buttonScale;
                 _height = gameIcon1.Size.Y * _buttonScale;
+            }
+        }
+
+        public void UpdateLvlsIcon()
+        {
+            Regex regex = new Regex("lvl" + _lvl + ":\\d{1,3}");
+            Match match = regex.Match(Game1.PlayerGamesInfo);
+            if (match.Success)
+            {
+                if (match.Value.Split(':')[1] == "5")
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_5stars"));
+                }
+                else if (match.Value.Split(':')[1] == "4")
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_4stars"));
+                }
+                else if (match.Value.Split(':')[1] == "3")
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_3stars"));
+                }
+                else if (match.Value.Split(':')[1] == "2")
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_2stars"));
+                }
+                else if (match.Value.Split(':')[1] == "1")
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_1stars"));
+                }
+                else
+                {
+                    _sizeScaleInPercent = 10f;
+                    gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_0stars"));
+                }
+            }
+            else
+            {
+                _sizeScaleInPercent = 10f;
+                gameIcon1 = new Sprite(_menu.ScreenManager.Content.Load<Texture2D>("gameObjs\\buttonGLevel4_0stars"));
             }
         }
 
@@ -121,6 +170,13 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         /// </summary>
         public void Update(bool isSelected, GameTime gameTime)
         {
+            if (lastPlayerGameInfo != Game1.PlayerGamesInfo && _type == EntryType.Screen)
+            {
+                lastPlayerGameInfo = Game1.PlayerGamesInfo;
+                UpdateLvlsIcon();
+            }
+
+
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
 #if WINDOWS_PHONE

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 using tainicom.Aether.Physics2D.Samples;
 using tainicom.Aether.Physics2D.Samples.DemosTEST;
 using tainicom.Aether.Physics2D.Samples.ScreenSystem;
@@ -13,6 +14,7 @@ namespace UberBuilder
     {
         private GraphicsDeviceManager _graphics;
         public static string SavePath { get; set; } = @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt";
+        public static string PlayerGamesInfo { get; set; }
 
         public Game1()
         {
@@ -36,6 +38,19 @@ namespace UberBuilder
             FrameRateCounter frameRateCounter = new FrameRateCounter(ScreenManager);
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
+
+            ////////////////////////////////
+            using (FileStream fs = new FileStream(
+                SavePath,
+                FileMode.OpenOrCreate,
+                FileAccess.Read
+                ))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    PlayerGamesInfo = sr.ReadToEnd();
+                }
+            }
         }
 
         void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
@@ -75,27 +90,27 @@ namespace UberBuilder
 
 
             MenuScreen menuScreen = new MenuScreen("Samples");
-            menuScreen.AddMenuItem(simpleTest.GetTitle(), EntryType.Screen, simpleTest);
-            menuScreen.AddMenuItem(gameLevel1.GetTitle(), EntryType.Screen, gameLevel1);
-            menuScreen.AddMenuItem(simpleDemo1.GetTitle(), EntryType.Screen, simpleDemo1);
-            menuScreen.AddMenuItem(simpleDemo2.GetTitle(), EntryType.Screen, simpleDemo2);
-            menuScreen.AddMenuItem(simpleDemo3.GetTitle(), EntryType.Screen, simpleDemo3);
-            menuScreen.AddMenuItem(simpleDemo4.GetTitle(), EntryType.Screen, simpleDemo4);
-            menuScreen.AddMenuItem(simpleDemo5.GetTitle(), EntryType.Screen, simpleDemo5);
-            menuScreen.AddMenuItem(simpleDemo6.GetTitle(), EntryType.Screen, simpleDemo6);
-            menuScreen.AddMenuItem(simpleDemo7.GetTitle(), EntryType.Screen, simpleDemo7);
-            menuScreen.AddMenuItem(simpleDemo8.GetTitle(), EntryType.Screen, simpleDemo8);
-            menuScreen.AddMenuItem(simpleDemo9.GetTitle(), EntryType.Screen, simpleDemo9);
-            menuScreen.AddMenuItem(simpleDemo10.GetTitle(), EntryType.Screen, simpleDemo10);
-            menuScreen.AddMenuItem(advancedDemo1.GetTitle(), EntryType.Screen, advancedDemo1);
-            menuScreen.AddMenuItem(advancedDemo2.GetTitle(), EntryType.Screen, advancedDemo2);
-            menuScreen.AddMenuItem(advancedDemo3.GetTitle(), EntryType.Screen, advancedDemo3);
-            menuScreen.AddMenuItem(advancedDemo4.GetTitle(), EntryType.Screen, advancedDemo4);
-            menuScreen.AddMenuItem(advancedDemo5.GetTitle(), EntryType.Screen, advancedDemo5);
+            menuScreen.AddMenuItem(simpleTest.GetTitle(), EntryType.Screen, simpleTest, "1");
+            menuScreen.AddMenuItem(gameLevel1.GetTitle(), EntryType.Screen, gameLevel1, "2");
+            menuScreen.AddMenuItem(simpleDemo1.GetTitle(), EntryType.Screen, simpleDemo1, "3");
+            menuScreen.AddMenuItem(simpleDemo2.GetTitle(), EntryType.Screen, simpleDemo2, "4");
+            menuScreen.AddMenuItem(simpleDemo3.GetTitle(), EntryType.Screen, simpleDemo3, "5");
+            menuScreen.AddMenuItem(simpleDemo4.GetTitle(), EntryType.Screen, simpleDemo4, "6");
+            menuScreen.AddMenuItem(simpleDemo5.GetTitle(), EntryType.Screen, simpleDemo5, "7");
+            menuScreen.AddMenuItem(simpleDemo6.GetTitle(), EntryType.Screen, simpleDemo6, "8");
+            menuScreen.AddMenuItem(simpleDemo7.GetTitle(), EntryType.Screen, simpleDemo7, "9");
+            menuScreen.AddMenuItem(simpleDemo8.GetTitle(), EntryType.Screen, simpleDemo8, "10");
+            menuScreen.AddMenuItem(simpleDemo9.GetTitle(), EntryType.Screen, simpleDemo9, "11");
+            menuScreen.AddMenuItem(simpleDemo10.GetTitle(), EntryType.Screen, simpleDemo10, "12");
+            menuScreen.AddMenuItem(advancedDemo1.GetTitle(), EntryType.Screen, advancedDemo1, "13");
+            menuScreen.AddMenuItem(advancedDemo2.GetTitle(), EntryType.Screen, advancedDemo2, "14");
+            menuScreen.AddMenuItem(advancedDemo3.GetTitle(), EntryType.Screen, advancedDemo3, "15");
+            menuScreen.AddMenuItem(advancedDemo4.GetTitle(), EntryType.Screen, advancedDemo4, "16");
+            menuScreen.AddMenuItem(advancedDemo5.GetTitle(), EntryType.Screen, advancedDemo5, "17");
 
 
-            menuScreen.AddMenuItem("", EntryType.Separator, null);
-            menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
+            menuScreen.AddMenuItem("", EntryType.Separator, null, "");
+            menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null, "");
 
             MainMenuScreen mainMenuScreen = new MainMenuScreen("MainMenu");
             mainMenuScreen.AddMenuItem(EntryType.Screen, menuScreen);

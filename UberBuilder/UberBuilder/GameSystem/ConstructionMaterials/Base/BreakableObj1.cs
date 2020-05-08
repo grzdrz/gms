@@ -53,12 +53,6 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
         public TriangulationAlgorithm _triangulationAlgorithm;
 
         public Body body { get { return _breakableBody.MainBody; } }
-        //public bool IsCanDraw { get; set; }
-
-        ////для отрисовки траектории
-        //private Dictionary<int, ThrowableBody> _throwableBodies = new Dictionary<int, ThrowableBody>();
-        //public Dictionary<int, ThrowableBody> throwableBodies { get { return _throwableBodies; } }
-
         public BreakableObj1(
             World world,
             ScreenManager screenManager, 
@@ -78,7 +72,6 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
             _triangulationAlgorithm = triangulationAlgorithm;
 
             #region "Триангуляция текстуры в полигоны"
-            //Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
             Texture2D alphabet = _screenManager.Content.Load<Texture2D>(_texturePath);
 
             uint[] data = new uint[alphabet.Width * alphabet.Height];
@@ -99,7 +92,7 @@ namespace UberBuilder.GameSystem.ConstructionMaterials
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
                 triangulated = Triangulate.ConvexPartition(polygon, triangulationAlgorithm);
 
-                Vector2 vertScale = new Vector2(0.01f, 0.01f)/*(new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height)) * scale*//*0.5f*/;
+                Vector2 vertScale = _textureScale/*new Vector2(0.01f, 0.01f)*//*(new Vector2(13.916667f, 23.25f) / new Vector2(alphabet.Width, alphabet.Height)) * scale*//*0.5f*/;
                 foreach (Vertices vertices in triangulated)
                     vertices.Scale(ref vertScale);
             }

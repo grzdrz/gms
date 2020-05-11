@@ -96,13 +96,13 @@ namespace UberBuilder.GameSystem
 
             _blocks = new List<BreakableObj1>();
 
-            _silhouette = new BuildingSilhouette(
-                World,
-                ScreenManager,
-                new Vector2(0f, 0f),
-                Camera,
-                new Vector2(20f, _height),
-                this.pathToSilhouette);
+            //_silhouette = new BuildingSilhouette(
+            //    World,
+            //    ScreenManager,
+            //    new Vector2(0f, 0f),
+            //    Camera,
+            //    new Vector2(20f, _height),
+            //    this.pathToSilhouette);
 
             //TEST();
 
@@ -119,7 +119,7 @@ namespace UberBuilder.GameSystem
                 b.Update(this._fixedMouseJoint);
             }
 
-            _silhouette.Update();
+            //_silhouette.Update();
 
 
             if (IsGameEnd)
@@ -136,7 +136,7 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            _silhouette.Draw();
+            //_silhouette.Draw();
             foreach (var b in _blocks)
             {
                 b.Draw();
@@ -257,11 +257,11 @@ namespace UberBuilder.GameSystem
             {
                 if ((input.KeyboardState.IsKeyDown(Keys.Z)) && tBlock._blockState == BlockState.Griped)
                 {
-                        tBlock.fixedRotation += 0.03f;
+                    tBlock.fixedRotation += 0.01f;
                 }
                 if ((input.KeyboardState.IsKeyDown(Keys.C)) && tBlock._blockState == BlockState.Griped)
                 {
-                    tBlock.fixedRotation -= 0.03f;
+                    tBlock.fixedRotation -= 0.01f;
                 }
             }
 
@@ -276,59 +276,197 @@ namespace UberBuilder.GameSystem
                 }
             }
 
-            //создать блок
-            if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
+            ////создать блок
+            //if (input.IsNewMouseButtonPress(MouseButtons.RightButton))
+            //{
+            //    string blockPath = "";
+            //    Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+            //    float massKoef = 10f;
+            //    var blockNum = rnd.Next(1, 100);
+            //    if (/*blockNum <= 99 && blockNum > 70*/input.IsNewKeyPress(Keys.Y))
+            //    {
+            //        blockPath = "gameObjs\\wood-plank";
+            //        var tempRnd = (float)(rnd.Next(1, 5));
+            //        sizeScale *= new Vector2(tempRnd, 1f);
+            //    }
+            //    else if (blockNum <= 70 && blockNum > 65)
+            //    {
+            //        blockPath = "gameObjs\\wood-circle";
+            //        //var tempRnd = (float)(rnd.Next(2, 3));
+            //        //sizeScale = new Vector2(0.4f, 0.25f);
+            //    }
+            //    else if (blockNum <= 65 && blockNum > 50)
+            //    {
+            //        blockPath = "gameObjs\\wood-corner";
+            //        //sizeScale = new Vector2(0.4f, 0.1f);
+            //    }
+            //    else if (blockNum <= 50 && blockNum > 40)
+            //    {
+            //        blockPath = "gameObjs\\wood-corner2";
+            //        //sizeScale = new Vector2(0.4f, 0.1f);
+            //    }
+            //    else if (blockNum <= 40 && blockNum > 10)
+            //    {
+            //        blockPath = "gameObjs\\wood-halfPlank";
+            //        //sizeScale = new Vector2(0.4f, 0.05f);
+            //    }
+            //    else
+            //    {
+            //        blockPath = "gameObjs\\bootilka1";
+            //        //sizeScale = new Vector2(0.1f, 0.3f);
+            //        massKoef = 1f;
+            //    }
+
+            //    _blocks.Add(new WoodBlock(
+            //        World,
+            //        ScreenManager,
+            //        new Vector2(-15f, -5f),
+            //        Camera,
+            //        blockPath,
+            //        TriangulationAlgorithm.Bayazit,
+            //        sizeScale,
+            //        50f,
+            //        massKoef));
+            //    _blocks.Last()._blockState = BlockState.Created;
+            //}
+
+            //////TEST
+            if (input.IsNewKeyPress(Keys.Y))
             {
                 string blockPath = "";
                 Vector2 sizeScale = new Vector2(0.005f, 0.005f);
-                float massKoef = 100f;
+                float massKoef = 10f;
                 var blockNum = rnd.Next(1, 100);
-                if (blockNum <= 99 && blockNum > 70)
-                {
-                    blockPath = "gameObjs\\wood-plank";
-                    var tempRnd = (float)(rnd.Next(1, 5));
-                    sizeScale *= new Vector2(tempRnd, 1f);
-                }
-                else if (blockNum <= 70 && blockNum > 55)
-                {
-                    blockPath = "gameObjs\\wood-circle";
-                    //var tempRnd = (float)(rnd.Next(2, 3));
-                    //sizeScale = new Vector2(0.4f, 0.25f);
-                }
-                else if (blockNum <= 55 && blockNum > 40)
-                {
-                    blockPath = "gameObjs\\wood-corner";
-                    //sizeScale = new Vector2(0.4f, 0.1f);
-                }
-                else if (blockNum <= 40 && blockNum > 25)
-                {
-                    blockPath = "gameObjs\\wood-corner2";
-                    //sizeScale = new Vector2(0.4f, 0.1f);
-                }
-                else if (blockNum <= 25 && blockNum > 10)
-                {
-                    blockPath = "gameObjs\\wood-halfPlank";
-                    //sizeScale = new Vector2(0.4f, 0.05f);
-                }
-                else
-                {
-                    blockPath = "gameObjs\\bootilka1";
-                    //sizeScale = new Vector2(0.1f, 0.3f);
-                    massKoef = 1f;
-                }
+
+                blockPath = "gameObjs\\wood-plank";
+                var tempRnd = (float)(rnd.Next(1, 5));
+                sizeScale *= new Vector2(tempRnd, 1f);
 
                 _blocks.Add(new WoodBlock(
-                    World,
-                    ScreenManager,
-                    new Vector2(-15f, -5f),
-                    Camera,
-                    blockPath,
-                    TriangulationAlgorithm.Bayazit,
-                    sizeScale,
-                    50f,
-                    massKoef));
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
                 _blocks.Last()._blockState = BlockState.Created;
             }
+            else if (input.IsNewKeyPress(Keys.U))
+            {
+                string blockPath = "";
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+                float massKoef = 10f;
+                var blockNum = rnd.Next(1, 100);
+
+                blockPath = "gameObjs\\wood-circle";
+                //var tempRnd = (float)(rnd.Next(2, 3));
+                //sizeScale = new Vector2(0.4f, 0.25f);
+
+                _blocks.Add(new WoodBlock(
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
+                _blocks.Last()._blockState = BlockState.Created;
+            }
+            else if (input.IsNewKeyPress(Keys.I))
+            {
+                string blockPath = "";
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+                float massKoef = 10f;
+                var blockNum = rnd.Next(1, 100);
+
+                blockPath = "gameObjs\\wood-corner";
+                //sizeScale = new Vector2(0.4f, 0.1f);
+
+                _blocks.Add(new WoodBlock(
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
+                _blocks.Last()._blockState = BlockState.Created;
+            }
+            else if (input.IsNewKeyPress(Keys.O))
+            {
+                string blockPath = "";
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+                float massKoef = 10f;
+                var blockNum = rnd.Next(1, 100);
+
+                blockPath = "gameObjs\\wood-corner2";
+                //sizeScale = new Vector2(0.4f, 0.1f);
+
+                _blocks.Add(new WoodBlock(
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
+                _blocks.Last()._blockState = BlockState.Created;
+            }
+            else if (input.IsNewKeyPress(Keys.P))
+            {
+                string blockPath = "";
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+                float massKoef = 10f;
+                var blockNum = rnd.Next(1, 100);
+
+                blockPath = "gameObjs\\wood-halfPlank";
+                //sizeScale = new Vector2(0.4f, 0.05f);
+
+                _blocks.Add(new WoodBlock(
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
+                _blocks.Last()._blockState = BlockState.Created;
+            }
+            else if (input.IsNewKeyPress(Keys.T))
+            {
+                string blockPath = "";
+                Vector2 sizeScale = new Vector2(0.005f, 0.005f);
+                float massKoef = 10f;
+                var blockNum = rnd.Next(1, 100);
+
+                blockPath = "gameObjs\\bootilka1";
+                //sizeScale = new Vector2(0.1f, 0.3f);
+                massKoef = 1f;
+
+                _blocks.Add(new WoodBlock(
+               World,
+               ScreenManager,
+               new Vector2(-15f, -5f),
+               Camera,
+               blockPath,
+               TriangulationAlgorithm.Bayazit,
+               sizeScale,
+               50f,
+               massKoef));
+                _blocks.Last()._blockState = BlockState.Created;
+            }
+            //////////////
 
             if (_fixedMouseJoint != null)
                 _fixedMouseJoint.WorldAnchorB = position;
@@ -508,19 +646,19 @@ namespace UberBuilder.GameSystem
                 ScreenManager.AddScreen(resultMessage);
 
                 #region "Сохранение результата"
-                string resultFileContent = "";
+                string resultFileContent = Game1.PlayerGamesInfo;
                 string resultFileContentUpd = "";
-                using (FileStream fs = new FileStream(
-                    Game1.SavePath,
-                    FileMode.OpenOrCreate,
-                    FileAccess.Read
-                    ))
-                {
-                    using (StreamReader sr = new StreamReader(fs))
-                    {
-                        resultFileContent = sr.ReadToEnd();
-                    }
-                }
+                //using (FileStream fs = new FileStream(
+                //    Game1.SavePath,
+                //    FileMode.OpenOrCreate,
+                //    FileAccess.Read
+                //    ))
+                //{
+                //    using (StreamReader sr = new StreamReader(fs))
+                //    {
+                //        resultFileContent = sr.ReadToEnd();
+                //    }
+                //}
                 using (FileStream fs = new FileStream(
                     Game1.SavePath,
                     FileMode.Create,

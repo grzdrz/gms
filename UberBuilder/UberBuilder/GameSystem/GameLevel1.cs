@@ -61,7 +61,8 @@ namespace UberBuilder.GameSystem
         #endregion
 
         public string lvl { get; } = "lvl1";
-        public string pathToOriginalSilhouette { get; set; } = @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\building3.png";
+        // public string pathToOriginalSilhouette { get; set; } = @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\building3.png";
+        public string pathToOriginalSilhouette { get; set; } = @"../assets/buildings/b4.png";
         public string pathToSilhouette { get; set; } = @"b4";
         public float _width { get; set; }
         public float _height { get; set; }
@@ -96,13 +97,13 @@ namespace UberBuilder.GameSystem
 
             _blocks = new List<BreakableObj1>();
 
-            //_silhouette = new BuildingSilhouette(
-            //    World,
-            //    ScreenManager,
-            //    new Vector2(0f, 0f),
-            //    Camera,
-            //    new Vector2(20f, _height),
-            //    this.pathToSilhouette);
+            _silhouette = new BuildingSilhouette(
+                World,
+                ScreenManager,
+                new Vector2(0f, 0f),
+                Camera,
+                new Vector2(20f, _height),
+                this.pathToSilhouette);
 
             //TEST();
 
@@ -119,7 +120,7 @@ namespace UberBuilder.GameSystem
                 b.Update(this._fixedMouseJoint);
             }
 
-            //_silhouette.Update();
+            _silhouette.Update();
 
 
             if (IsGameEnd)
@@ -136,7 +137,7 @@ namespace UberBuilder.GameSystem
             ScreenManager.BatchEffect.Projection = Camera.Projection;
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            //_silhouette.Draw();
+            _silhouette.Draw();
             foreach (var b in _blocks)
             {
                 b.Draw();
@@ -586,7 +587,7 @@ namespace UberBuilder.GameSystem
                 }
 
                 #region "Тестовый сейв скриншота"
-                using (FileStream fs = new FileStream(@"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\3333.png", FileMode.Create, FileAccess.ReadWrite))
+                using (FileStream fs = new FileStream(@"../assets/results/3333.png", FileMode.Create, FileAccess.ReadWrite))
                 {
                     bitmap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
                 }

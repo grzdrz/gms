@@ -13,7 +13,7 @@ namespace UberBuilder
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        public static string SavePath { get; set; } = @"C:\Users\space\Рабочий стол\TESTTESTTESTASSGDF\resultTEST\clientGameSaves.txt";
+        public static string SavePath { get; set; } = @"../assets/results/clientGameSaves.txt";
         public static string PlayerGamesInfo { get; set; }
 
         public Game1()
